@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break 2 System | Enterprise SaaS V26.0</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card-bg: #171c28;
+            --primary: #6366f1;
+            --accent: #a855f7;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --input-bg: #0b0e14;
+        }
+
+        * { box-sizing: border-box; outline: none; transition: 0.2s ease; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--bg); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .glass { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+        /* Login Layout */
+        .login-wrapper { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at top right, #1e1b4b, #0b0e14); }
+        .login-card { width: 440px; padding: 50px; text-align: center; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); font-weight: 700; }
+        .form-group input, .form-group select { width: 100%; padding: 15px; border-radius: 12px; background: var(--input-bg); border: 1px solid var(--border); color: white; font-family: 'Cairo'; }
+        .btn-action { width: 100%; padding: 15px; border-radius: 12px; border: none; background: linear-gradient(135deg, #6366f1, #a855f7); color: white; font-weight: 800; cursor: pointer; }
+
+        /* Navbar */
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; margin-bottom: 25px; border-bottom: 2px solid var(--primary); }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-btn { background: transparent; border: none; color: var(--text-dim); padding: 10px 18px; border-radius: 12px; cursor: pointer; font-family: 'Cairo'; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+
+        /* Grid */
+        .main-grid { display: grid; grid-template-columns: 420px 1fr; gap: 25px; }
+        @media (max-width: 1100px) { .main-grid { grid-template-columns: 1fr; } }
+        
+        .feed-card { padding: 20px; margin-bottom: 15px; border-radius: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-right: 5px solid var(--warning); position: relative; }
+        .feed-card.status-done { border-right-color: var(--success); }
+        .badge { background: rgba(99, 102, 241, 0.15); color: var(--primary); padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; }
+
+        /* Permissions Matrix Styles */
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-top: 10px; }
+        .perm-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-dim); cursor: pointer; }
+        .perm-item input { width: auto; margin: 0; cursor: pointer; }
+
+        .stat-card { padding: 20px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
+        .stat-card .val { font-size: 1.8rem; font-weight: 900; display: block; }
+
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <audio id="siren-sound" loop><source src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
+
+    <!-- Login Page -->
+    <div id="login-page" class="login-wrapper">
+        <div class="glass login-card">
+            <i class="fas fa-layer-group" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i>
+            <h2 style="font-weight:900;">BREAK 2 ENTERPRISE</h2>
+            <div class="form-group"><label>كود الشركة</label><input type="text" id="log-comp" placeholder="sultan-rest"></div>
+            <div class="form-group"><label>اسم المستخدم</label><input type="text" id="log-user" placeholder="Username"></div>
+            <div class="form-group"><label>كلمة المرور</label><input type="password" id="log-pass" placeholder="Password"></div>
+            <button class="btn-action" onclick="handleLogin()">دخول آمن</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden">
+        <div class="container">
+            <nav class="glass nav-bar">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="background:var(--primary); padding:12px; border-radius:12px;"><i class="fas fa-id-card"></i></div>
+                    <div>
+                        <div id="display-name" style="font-weight:900;">--</div>
+                        <div id="display-title" style="font-size:0.7rem; color:var(--accent); font-weight:bold; text-transform:uppercase;">--</div>
+                    </div>
+                </div>
+                <div class="nav-links">
+                    <button id="nav-home" class="nav-btn active" onclick="showPage('home')"><i class="fas fa-home"></i> الرئيسية</button>
+                    <button id="nav-ops" class="nav-btn" onclick="showPage('ops')"><i class="fas fa-history"></i> السجل</button>
+                    <button id="nav-reports" class="nav-btn hidden" onclick="showPage('reports')"><i class="fas fa-chart-line"></i> التقارير</button>
+                    <button id="nav-admin" class="nav-btn hidden" onclick="showPage('admin')"><i class="fas fa-users-cog"></i> الإدارة</button>
+                    <button id="nav-super" class="nav-btn hidden" onclick="showPage('super')" style="color:var(--success)"><i class="fas fa-crown"></i> Master</button>
+                    <button class="nav-btn" onclick="logout()" style="color:var(--danger)"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </nav>
+
+            <!-- Home -->
+            <div id="page-home" class="main-grid">
+                <aside id="sidebar-action"></aside>
+                <main>
+                    <h3><i class="fas fa-bullhorn" style="color:var(--primary)"></i> البلاغات المفتوحة</h3>
+                    <div id="live-feed"></div>
+                </main>
+            </div>
+
+            <!-- سجل العمليات -->
+            <div id="page-ops" class="hidden">
+                <div class="glass" style="padding:25px;">
+                    <h3>أرشيف العمليات</h3>
+                    <div id="ops-list"></div>
+                </div>
+            </div>
+
+            <!-- التقارير -->
+            <div id="page-reports" class="hidden">
+                <div class="stats-grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; margin-bottom:25px;">
+                    <div class="glass stat-card" style="border-bottom:3px solid var(--primary);"><span class="val" id="st-ords">0</span><span>أوردرات</span></div>
+                    <div class="glass stat-card" style="border-bottom:3px solid var(--danger);"><span class="val" id="st-comps">0</span><span>شكاوى</span></div>
+                    <div class="glass stat-card" style="border-bottom:3px solid var(--warning);"><span class="val" id="st-err">0%</span><span>معدل الخطأ</span></div>
+                    <div class="glass stat-card" style="border-bottom:3px solid var(--success);"><span class="val" id="st-qual">0%</span><span>جودة التشغيل</span></div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
+                    <div class="glass" style="padding:20px;"><canvas id="chartMain"></canvas></div>
+                    <div class="glass" style="padding:20px;"><h4>تحليل أداء الفروع</h4><div id="branch-ranking"></div></div>
+                </div>
+            </div>
+
+            <!-- Master Panel (You) -->
+            <div id="page-super" class="hidden">
+                <div class="main-grid">
+                    <div class="glass" style="padding:25px;">
+                        <h3>إنشاء شركة جديدة</h3>
+                        <div class="form-group"><label>اسم الشركة</label><input type="text" id="sup-name"></div>
+                        <div class="form-group"><label>كود الشركة (للـ Login)</label><input type="text" id="sup-id"></div>
+                        <div class="form-group"><label>يوزر مدير الشركة</label><input type="text" id="sup-adm-u"></div>
+                        <div class="form-group"><label>باسورد مدير الشركة</label><input type="password" id="sup-adm-p"></div>
+                        <button class="btn-action" onclick="masterCreateCompany()">تفعيل المؤسسة</button>
+                    </div>
+                    <div class="glass" style="padding:25px;">
+                        <h3>الشركات المتعاقدة</h3>
+                        <table class="admin-table"><tbody id="master-companies-list"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel (Company Management) -->
+            <div id="page-admin" class="hidden">
+                <div class="main-grid">
+                    <div class="glass" style="padding:25px;">
+                        <h3 style="color:var(--accent);">ربط واتساب الشركة</h3>
+                        <div class="form-group"><label>Instance ID</label><input type="text" id="wa-inst"></div>
+                        <div class="form-group"><label>Token</label><input type="text" id="wa-tok"></div>
+                        <button class="btn-action" style="background:var(--accent);" onclick="saveCompanyWA()">حفظ مفاتيح الواتساب</button>
+
+                        <h3 style="margin-top:30px; color:var(--primary);">إضافة موظف وتحديد صلاحياته</h3>
+                        <div class="form-group"><label>اسم المستخدم</label><input type="text" id="adm-u"></div>
+                        <div class="form-group"><label>الاسم بالكامل</label><input type="text" id="adm-n"></div>
+                        <div class="form-group"><label>اللقب الوظيفي</label>
+                            <select id="adm-title">
+                                <option>مدير فرع</option>
+                                <option>مشرف</option>
+                                <option>ديسباتشر</option>
+                                <option>كول سنتر</option>
+                                <option>طيار</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>الفرع التابع له</label><select id="adm-b"></select></div>
+                        <div class="form-group"><label>كلمة المرور</label><input type="password" id="adm-p"></div>
+                        
+                        <label>مصفوفة صلاحيات الوصول:</label>
+                        <div class="perm-grid">
+                            <label class="perm-item"><input type="checkbox" id="p-all"> رؤية كل الفروع</label>
+                            <label class="perm-item"><input type="checkbox" id="p-rep"> رؤية التقارير</label>
+                            <label class="perm-item"><input type="checkbox" id="p-sol" checked> حل البلاغات</label>
+                            <label class="perm-item"><input type="checkbox" id="p-adm"> دخول الإدارة</label>
+                        </div>
+                        <button class="btn-action" style="margin-top:20px;" onclick="companyCreateUser()">حفظ بيانات الموظف</button>
+                    </div>
+
+                    <div class="glass" style="padding:25px;">
+                        <h3 style="color:var(--success);">إدارة الفروع والأرقام</h3>
+                        <div style="display:flex; gap:10px; margin-bottom:20px;">
+                            <input type="text" id="new-b-name" placeholder="اسم الفرع الجديد">
+                            <button onclick="companyAddBranch()" style="width:100px; background:var(--success); border:none; border-radius:12px; color:white;">+ إضافة</button>
+                        </div>
+                        <div id="branch-settings-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;"></div>
+                        
+                        <h3>قائمة الموظفين</h3>
+                        <table class="admin-table">
+                            <thead><tr><th>الموظف</th><th>اللقب</th><th>الصلاحية</th><th>حذف</th></tr></thead>
+                            <tbody id="company-users-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSwsheoAEJm3pLMI8lhVvzFnLS-a4FrVA",
+            databaseURL: "https://break2-5de32-default-rtdb.firebaseio.com",
+            projectId: "break2-5de32"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let currentUser = null, opsData = {}, branches = [], branchPhones = {}, branchOrders = {}, companyWA = {};
+        let isAlarmOn = false, lastOpKey = null;
+
+        // --- Auth System ---
+        async function handleLogin() {
+            const comp = document.getElementById('log-comp').value.trim().toLowerCase();
+            const user = document.getElementById('log-user').value.trim();
+            const pass = document.getElementById('log-pass').value.trim();
+
+            if(comp === "admin" && user === "master" && pass === "root77") {
+                saveSession({ comp: "master_system", id: "master", name: "المبرمج العام", role: "SUPER", title: "SUPER ADMIN", perms: {all: true, rep: true, adm: true, sol: true} });
+                return;
+            }
+
+            const snap = await db.ref(`companies/${comp}/users/${user}`).get();
+            if(snap.exists() && snap.val().pass === pass) {
+                saveSession({ comp: comp, id: user, ...snap.val() });
+            } else {
+                Swal.fire('خطأ', 'بيانات الدخول غير صحيحة', 'error');
+            }
+        }
+
+        function saveSession(data) { localStorage.setItem('break2_v26_core', JSON.stringify(data)); location.reload(); }
+        function logout() { localStorage.removeItem('break2_v26_core'); location.reload(); }
+
+        window.onload = () => {
+            const session = localStorage.getItem('break2_v26_core');
+            if(session) {
+                currentUser = JSON.parse(session);
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('display-name').innerText = currentUser.name;
+                document.getElementById('display-title').innerText = currentUser.title + " | " + currentUser.comp.toUpperCase();
+
+                // تطبيق الصلاحيات
+                if(currentUser.role === 'SUPER') document.getElementById('nav-super').classList.remove('hidden');
+                if(currentUser.perms?.rep) document.getElementById('nav-reports').classList.remove('hidden');
+                if(currentUser.perms?.adm || currentUser.role === 'ADMIN') document.getElementById('nav-admin').classList.remove('hidden');
+                
+                initCoreData();
+            }
+        };
+
+        function initCoreData() {
+            const path = `companies/${currentUser.comp}`;
+            
+            db.ref(`${path}/branches`).on('value', snap => {
+                branches = snap.val() || [];
+                const sel = document.getElementById('adm-b');
+                if(sel) {
+                    sel.innerHTML = '<option value="ALL">كل الفروع (مشترك)</option>';
+                    branches.forEach(b => sel.innerHTML += `<option value="${b}">${b}</option>`);
+                }
+                renderSidebar();
+                if(currentUser.perms?.adm || currentUser.role === 'ADMIN') renderBranchSettings();
+            });
+
+            db.ref(`${path}/settings`).on('value', snap => {
+                const s = snap.val() || {};
+                companyWA = s.whatsapp || {};
+                branchPhones = s.phones || {};
+                branchOrders = s.orders || {};
+                if(currentUser.role === 'ADMIN' || currentUser.perms?.adm) {
+                    document.getElementById('wa-inst').value = companyWA.instance_id || '';
+                    document.getElementById('wa-tok').value = companyWA.token || '';
+                    renderBranchSettings();
+                }
+                calculateStats();
+            });
+
+            db.ref(`${path}/operations`).on('value', snap => {
+                opsData = snap.val() || {};
+                renderHome(); renderOps();
+                if(currentUser.perms?.rep) calculateStats();
+                
+                const keys = Object.keys(opsData);
+                const last = keys[keys.length - 1];
+                if(last && last !== lastOpKey) {
+                    const op = opsData[last];
+                    if(op.status === 'pending' && (op.branch === currentUser.branch || currentUser.perms?.all)) playAlarm(op);
+                    lastOpKey = last;
+                }
+            });
+
+            if(currentUser.perms?.adm || currentUser.role === 'ADMIN') {
+                db.ref(`${path}/users`).on('value', snap => {
+                    const body = document.getElementById('company-users-table'); body.innerHTML = "";
+                    snap.forEach(u => body.innerHTML += `<tr><td>${u.val().name}</td><td>${u.val().title}</td><td>${u.val().branch === 'ALL' ? 'كل الفروع' : u.val().branch}</td><td><button onclick="db.ref('${path}/users/${u.key}').remove()" style="color:red; background:none; border:none;"><i class="fas fa-trash"></i></button></td></tr>`);
+                });
+            }
+            if(currentUser.role === 'SUPER') {
+                db.ref(`companies`).on('value', snap => {
+                    const body = document.getElementById('master-companies-list'); body.innerHTML = "";
+                    snap.forEach(c => { if(c.key !== 'master_system') body.innerHTML += `<tr><td>${c.key}</td><td>${c.val().meta?.name}</td><td><button onclick="db.ref('companies/${c.key}').remove()" style="color:red">حذف</button></td></tr>`; });
+                });
+            }
+        }
+
+        // --- UI & Actions ---
+        function renderSidebar() {
+            const side = document.getElementById('sidebar-action');
+            if(!side) return;
+            side.innerHTML = `<div class="glass" style="padding:25px;">
+                <h3>إرسال بلاغ</h3>
+                <div class="form-group"><label>الفرع</label><select id="in-branch">${currentUser.perms?.all ? branches.map(b=>`<option>${b}</option>`).join('') : `<option>${currentUser.branch}</option>`}</select></div>
+                <div class="form-group"><label>رقم الأوردر</label><input type="text" id="in-order"></div>
+                <div class="form-group"><label>المشكلة</label><textarea id="in-msg" rows="3"></textarea></div>
+                <button class="btn-action" onclick="sendReport()">إرسال البلاغ</button>
+            </div>`;
+        }
+
+        async function sendReport() {
+            const b = document.getElementById('in-branch').value, o = document.getElementById('in-order').value, m = document.getElementById('in-msg').value;
+            if(!o || !m) return;
+            await db.ref(`companies/${currentUser.comp}/operations`).push({ branch: b, order: o, msg: m, status: 'pending', sender: currentUser.name, time: new Date().toLocaleTimeString('ar-EG') });
+            
+            if(companyWA.instance_id && branchPhones[b]) {
+                const text = `🚨 *بلاغ جديد*\n🏢 *الفرع:* ${b}\n📦 *الأوردر:* ${o}\n⚠️ *المشكلة:* ${m}`;
+                fetch(`https://api.ultramsg.com/${companyWA.instance_id}/messages/chat`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ token: companyWA.token, to: branchPhones[b], body: text }) });
+            }
+            Swal.fire({ title: 'تم الإرسال', icon: 'success', toast: true, position: 'top-end', timer: 2000 });
+            document.getElementById('in-order').value = ""; document.getElementById('in-msg').value = "";
+        }
+
+        function renderHome() {
+            const feed = document.getElementById('live-feed'); feed.innerHTML = "";
+            Object.keys(opsData).reverse().forEach(id => {
+                const item = opsData[id];
+                if(item.status !== 'pending') return;
+                if(!currentUser.perms?.all && item.branch !== currentUser.branch) return;
+                
+                feed.innerHTML += `<div class="feed-card">
+                    <span class="badge">${item.branch}</span>
+                    <h4 style="margin:10px 0;">${item.msg}</h4>
+                    <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:15px;">#${item.order} | من: ${item.sender}</div>
+                    ${currentUser.perms?.sol ? `
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="sol-${id}" placeholder="اكتب رد.." style="flex:1; padding:10px; border-radius:10px; background:rgba(0,0,0,0.2); color:white; border:1px solid var(--border);">
+                        <button onclick="solveOp('${id}')" style="background:var(--success); border:none; color:white; padding:0 20px; border-radius:10px; cursor:pointer;">حل</button>
+                    </div>` : ''}
+                </div>`;
+            });
+        }
+
+        function solveOp(id) {
+            const r = document.getElementById('sol-'+id).value || "تم الحل";
+            db.ref(`companies/${currentUser.comp}/operations/${id}`).update({ status: 'done', reply: r });
+        }
+
+        function renderOps() {
+            const list = document.getElementById('ops-list'); list.innerHTML = "";
+            Object.keys(opsData).reverse().forEach(id => {
+                const item = opsData[id];
+                if(!currentUser.perms?.all && item.branch !== currentUser.branch) return;
+                list.innerHTML += `<div class="feed-card status-${item.status}">
+                    <b>${item.branch} - #${item.order}</b> <p>${item.msg}</p>
+                    <small>${item.status==='done' ? '✅ تم الحل: '+item.reply : '⏳ قيد المعالجة'}</small>
+                </div>`;
+            });
+        }
+
+        // --- Admin Setup ---
+        function renderBranchSettings() {
+            const grid = document.getElementById('branch-settings-grid');
+            if(!grid) return; grid.innerHTML = "";
+            branches.forEach(b => {
+                grid.innerHTML += `<div class="glass" style="padding:15px; border:1px solid rgba(16, 185, 129, 0.2);">
+                    <b style="color:var(--success)">فرع: ${b}</b>
+                    <input type="number" id="o-${b}" value="${branchOrders[b]||0}" placeholder="أوردرات اليوم" style="margin:8px 0; font-size:0.7rem;">
+                    <input type="text" id="p-${b}" value="${branchPhones[b]||''}" placeholder="واتساب مدير الفرع" style="margin-bottom:8px; font-size:0.7rem;">
+                    <button onclick="saveBranchConfig('${b}')" style="background:var(--success); border:none; color:white; width:100%; padding:5px; border-radius:8px; cursor:pointer; font-size:0.7rem;">حفظ</button>
+                </div>`;
+            });
+        }
+
+        function saveBranchConfig(b) {
+            db.ref(`companies/${currentUser.comp}/settings/orders/${b}`).set(parseInt(document.getElementById('o-'+b).value) || 0);
+            db.ref(`companies/${currentUser.comp}/settings/phones/${b}`).set(document.getElementById('p-'+b).value.trim());
+            Swal.fire({title:'تم الحفظ', icon:'success', toast:true, position:'top-end', timer:1500});
+        }
+
+        async function saveCompanyWA() {
+            await db.ref(`companies/${currentUser.comp}/settings/whatsapp`).set({ instance_id: document.getElementById('wa-inst').value.trim(), token: document.getElementById('wa-tok').value.trim() });
+            Swal.fire('تم الربط', '', 'success');
+        }
+
+        async function companyCreateUser() {
+            const u = document.getElementById('adm-u').value.trim(), p = document.getElementById('adm-p').value.trim();
+            if(!u || !p) return;
+            const perms = {
+                all: document.getElementById('p-all').checked,
+                rep: document.getElementById('p-rep').checked,
+                sol: document.getElementById('p-sol').checked,
+                adm: document.getElementById('p-adm').checked
+            };
+            await db.ref(`companies/${currentUser.comp}/users/${u}`).set({
+                name: document.getElementById('adm-n').value.trim(),
+                title: document.getElementById('adm-title').value,
+                branch: document.getElementById('adm-b').value,
+                pass: p, role: "USER", perms: perms, global: perms.all
+            });
+            Swal.fire('تم الحفظ بنجاح', '', 'success');
+        }
+
+        async function companyAddBranch() {
+            const n = document.getElementById('new-b-name').value.trim();
+            if(!n) return; branches.push(n);
+            await db.ref(`companies/${currentUser.comp}/branches`).set(branches);
+            document.getElementById('new-b-name').value = "";
+        }
+
+        // --- Master & Stats ---
+        async function masterCreateCompany() {
+            const n = document.getElementById('sup-name').value.trim(), id = document.getElementById('sup-id').value.trim().toLowerCase(), u = document.getElementById('sup-adm-u').value.trim(), p = document.getElementById('sup-adm-p').value.trim();
+            if(!n || !id || !u || !p) return;
+            await db.ref(`companies/${id}/meta`).set({ name: n });
+            await db.ref(`companies/${id}/users/${u}`).set({ name: "أدمن الشركة", title: "ADMIN", branch: "ALL", pass: p, role: "ADMIN", perms: {all:true, rep:true, sol:true, adm:true}, global:true });
+            await db.ref(`companies/${id}/branches`).set(['المقر الرئيسي']);
+            Swal.fire('تم إنشاء الشركة', '', 'success');
+        }
+
+        function calculateStats() {
+            let totalO = 0, totalC = 0, bList = [];
+            const allowed = currentUser.perms?.all ? branches : [currentUser.branch];
+            allowed.forEach(b => {
+                const ords = branchOrders[b] || 0;
+                const comps = Object.values(opsData).filter(o => o.branch === b).length;
+                totalO += ords; totalC += comps;
+                bList.push({ name: b, ords, comps, err: ords > 0 ? (comps/ords*100).toFixed(1) : 0 });
+            });
+            document.getElementById('st-ords').innerText = totalO;
+            document.getElementById('st-comps').innerText = totalC;
+            const er = totalO > 0 ? (totalC/totalO*100).toFixed(1) : 0;
+            document.getElementById('st-err').innerText = er + "%";
+            document.getElementById('st-qual').innerText = (100 - er).toFixed(1) + "%";
+            document.getElementById('branch-ranking').innerHTML = bList.map(b => `<div style="margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-size:0.8rem;"><span>${b.name}</span><b>${b.err}%</b></div><div style="height:5px; background:#222; border-radius:5px;"><div style="width:${Math.min(b.err*4, 100)}%; height:100%; background:var(--primary);"></div></div></div>`).join('');
+        }
+
+        function playAlarm(op) {
+            if(isAlarmOn) return; isAlarmOn = true;
+            document.getElementById('siren-sound').play().catch(e => console.log(e));
+            Swal.fire({ title: '🚨 بلاغ جديد!', text: `${op.branch}: ${op.msg}`, confirmButtonText: 'إيقاف الإنذار' }).then(() => { document.getElementById('siren-sound').pause(); isAlarmOn = false; });
+        }
+
+        function showPage(p) {
+            ['home', 'ops', 'reports', 'admin', 'super'].forEach(pg => {
+                if(document.getElementById('page-'+pg)) document.getElementById('page-'+pg).classList.add('hidden');
+                if(document.getElementById('nav-'+pg)) document.getElementById('nav-'+pg).classList.remove('active');
+            });
+            document.getElementById('page-'+p).classList.remove('hidden');
+            document.getElementById('nav-'+p).classList.add('active');
+        }
+    </script>
+</body>
+</html>
