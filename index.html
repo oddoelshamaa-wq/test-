@@ -138,10 +138,10 @@
             background-attachment: fixed;
         }
 
-        /* 
-           --- NEW LAYOUT STRUCTURE (Sidebar + Content) --- 
+        /*
+           --- NEW LAYOUT STRUCTURE (Sidebar + Content) ---
         */
-        
+
         /* 1. القائمة الجانبية الثابتة */
         .system-side-nav {
             position: fixed;
@@ -170,6 +170,167 @@
             padding-bottom: 100px;
             max-width: 100%;
             animation: slideUpFade 0.7s ease-out;
+        }
+
+        /* زر الهامبرغر للهواتف */
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            background: var(--gold-master);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            transition: 0.3s;
+        }
+
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* استجابة للهواتف */
+        @media (max-width: 768px) {
+            .system-side-nav {
+                right: -100%;
+                width: 280px;
+                top: 0;
+                bottom: 0;
+                border-radius: 0;
+                transition: right 0.3s ease;
+            }
+
+            .system-side-nav.open {
+                right: 0;
+            }
+
+            .vip-master-container {
+                margin-right: 0;
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .hamburger-btn {
+                display: block;
+            }
+
+            .floating-action-master {
+                left: 20px;
+                bottom: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+
+            .identity-matrix {
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+            }
+
+            .identity-orb-vip {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .identity-labels h2 {
+                font-size: 1.2rem;
+            }
+
+            .nav-link-vip {
+                padding: 15px 20px;
+                font-size: 0.9rem;
+            }
+
+            .massive-glass-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            .ticket-visual-unit {
+                padding: 20px;
+            }
+
+            .daily-matrix-display {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .branch-data-card {
+                padding: 20px;
+            }
+
+            .massive-daily-input {
+                font-size: 3rem;
+            }
+
+            .stat-cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .analytics-pill-card h2 {
+                font-size: 2rem;
+            }
+
+            .analytics-dual-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .admin-layout-flex {
+                grid-template-columns: 1fr;
+            }
+
+            .scrollable-admin-list {
+                max-height: 300px;
+            }
+
+            .admin-row-item {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+
+            .btn-vip-execute-master {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+
+            .massive-glass-card h2 {
+                font-size: 2rem;
+            }
+
+            .massive-glass-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .audit-row-item {
+                font-size: 0.9rem;
+            }
+
+            .toast-msg-vip {
+                padding: 15px 30px;
+                font-size: 0.9rem;
+            }
+
+            .login-card-massive {
+                width: 90%;
+                padding: 60px 40px;
+            }
+
+            .login-card-massive h1 {
+                font-size: 3rem;
+            }
+
+            .login-card-massive p {
+                font-size: 1.2rem;
+            }
         }
 
         /* 
@@ -717,7 +878,12 @@
 
         <!-- MAIN CONTENT CONTAINER (Pushed to Left) -->
         <div class="vip-master-container">
-            
+
+            <!-- Hamburger Menu for Mobile -->
+            <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <!-- Floating Command Trigger (Left Side now) -->
             <button class="floating-action-master" id="floating-plus-btn" onclick="openSidebarControl()">
                 <i class="fas fa-plus"></i>
@@ -1693,6 +1859,11 @@
             const sb = document.getElementById('sidebar-complaint-arc-hub');
             sb.classList.remove('open');
             document.getElementById('master-dimmer').style.display = 'none';
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('system-side-nav');
+            sb.classList.toggle('open');
         }
 
         function switchToAppModule(m) {
