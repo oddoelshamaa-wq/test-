@@ -131,7 +131,7 @@
             color: var(--text-pure);
             min-height: 100vh;
             overflow-x: hidden;
-            font-size: 15px;
+            font-size: 10px;
             background-image: 
                 radial-gradient(circle at 5% 5%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
                 radial-gradient(circle at 95% 95%, rgba(29, 78, 216, 0.08) 0%, transparent 50%);
@@ -880,7 +880,10 @@
         
         <label>فرع البلاغ المعني بالواقعة</label>
         <select id="f-branch-master-sel"></select>
-        
+
+        <label>تاريخ الواقعة (يمكن اختيار تاريخ قديم)</label>
+        <input type="date" id="f-date-master">
+
         <label>رقم الأوردر (Order Identifier)</label>
         <input id="f-order-id-input" placeholder="#00000000">
         
@@ -1004,6 +1007,7 @@
                 document.getElementById('archive-date-to').value = todayStr;
                 document.getElementById('reports-date-from').value = todayStr;
                 document.getElementById('reports-date-to').value = todayStr;
+                document.getElementById('f-date-master').value = todayStr;
 
                 initCoreDataListeners();
             }
@@ -1088,24 +1092,25 @@
 
             const timeNow = new Date().toLocaleTimeString('ar-EG');
             const dateNow = new Date().toISOString().split('T')[0];
+            const selectedDate = document.getElementById('f-date-master').value;
 
             const ticketData = {
-                branch: br, 
-                order: ord, 
-                customer: cust, 
-                type: type, 
-                msg: msg, 
+                branch: br,
+                order: ord,
+                customer: cust,
+                type: type,
+                msg: msg,
                 driver: drv,
-                stage: 'waiting_review', 
+                stage: 'waiting_review',
                 status: 'active',
-                timestamp: new Date().toLocaleString('ar-EG'), 
-                timeOnly: timeNow, 
-                date: dateNow,
+                timestamp: new Date().toLocaleString('ar-EG'),
+                timeOnly: timeNow,
+                date: selectedDate,
                 author: currentUserSession.name,
-                logs: [{ 
-                    time: timeNow, 
-                    user: currentUserSession.name, 
-                    action: "تحرير بلاغ VIP وتوجيه للمراجعة." 
+                logs: [{
+                    time: timeNow,
+                    user: currentUserSession.name,
+                    action: "تحرير بلاغ VIP وتوجيه للمراجعة."
                 }]
             };
 
@@ -1184,8 +1189,18 @@
             if(isInteractive) {
                 if(op.stage === 'waiting_review' && (p.reply_ticket || currentUserSession.role === 'SUPER')) {
                     btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="openBranchReplyModalHub('${id}')">الرد والمراجعة الرسمية <i class="fas fa-reply-all"></i></button>`;
-                } else if(op.stage === 'replied' && (currentUserSession.title === 'ديسبتشر' || currentUserSession.role === 'SUPER')) {
-                    btns = `<button class="btn-vip-execute-master" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً للأرشيف</button>`;
+                } else if(op.stage === 'replied' && currentUserSession.role === 'SUPER') {
+                    btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
+                            <button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff;" onclick="sendToBranchManagerFromCallCenter('${id}')">إرسال لمدير الفرع (ناقص فعلاً) <i class="fas fa-arrow-right"></i></button>`;
+                } else if(op.stage === 'sent_to_branch_manager' && currentUserSession.title === 'مدير فرع') {
+                    btns = `<button class="btn-vip-execute-master" onclick="openBranchManagerReplyModalHub('${id}')">الرد كمدير فرع <i class="fas fa-reply-all"></i></button>`;
+                } else if(op.stage === 'sent_back_to_call_center' && currentUserSession.role === 'SUPER') {
+                    btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
+                            <button class="btn-vip-execute-master" onclick="sendToRegionalManager('${id}')">إرسال لمدير المنطقة <i class="fas fa-arrow-up"></i></button>`;
+                } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.title === 'مدير المنطقة') {
+                    btns = `<button class="btn-vip-execute-master" onclick="openRegionalManagerReplyModalHub('${id}')">الرد كمدير منطقة <i class="fas fa-reply-all"></i></button>`;
+                } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.role === 'SUPER') {
+                    btns = `<button class="btn-vip-execute-master" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً <i class="fas fa-check-circle"></i></button>`;
                 }
             }
 
@@ -1195,9 +1210,12 @@
                     <span class="timestamp-label">${l.time}</span>
                 </div>`).join('') : '';
 
-            const badge = op.branch_verdict === 'ناقص' ? 
-                '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">تأكيد نقص فعلي ❌</span>' : 
-                (op.branch_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">الأوردر كامل وسليم ✅</span>' : '');
+            const badge = (op.branch_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">تأكيد نقص فعلي ❌</span>' :
+                (op.branch_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">الأوردر كامل وسليم ✅</span>' : '')) +
+                (op.branch_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير الفرع: نقص فعلي ❌</span>' :
+                (op.branch_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير الفرع: كامل ✅</span>' : '')) +
+                (op.regional_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير المنطقة: نقص فعلي ❌</span>' :
+                (op.regional_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير المنطقة: كامل ✅</span>' : ''));
 
             return `
                 <div class="massive-glass-card ticket-visual-unit">
@@ -1377,11 +1395,12 @@
                 const op = complaintsCache[id];
                 const action = res[0] === 'ناقص' ? `الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد الفرع: [الطلب سليم] - ${res[1]}`;
                 const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
-                
-                await dbHub.ref('operations/'+id).update({ 
-                    stage: 'replied', 
-                    branch_verdict: res[0], 
-                    logs: [...(op.logs || []), log] 
+                const newStage = 'replied';
+
+                await dbHub.ref('operations/'+id).update({
+                    stage: newStage,
+                    branch_verdict: res[0],
+                    logs: [...(op.logs || []), log]
                 });
                 renderSystemToast("تم تثبيت رد الفرع بنجاح!", "success");
             }
@@ -1389,16 +1408,96 @@
 
         async function finalizeTicketAndArchive(id) {
             const op = complaintsCache[id];
-            const log = { 
-                time: new Date().toLocaleTimeString('ar-EG'), 
-                user: currentUserSession.name, 
-                action: "إغلاق البلاغ نهائياً للأرشيف السحابي." 
+            const log = {
+                time: new Date().toLocaleTimeString('ar-EG'),
+                user: currentUserSession.name,
+                action: "إغلاق البلاغ نهائياً للأرشيف السحابي."
             };
-            await dbHub.ref('operations/'+id).update({ 
-                status: 'done', 
-                logs: [...(op.logs || []), log] 
+            await dbHub.ref('operations/'+id).update({
+                status: 'done',
+                logs: [...(op.logs || []), log]
             });
             renderSystemToast("تم أرشفة البلاغ بنجاح.", "success");
+        }
+
+        async function sendToBranchManagerFromCallCenter(id) {
+            const op = complaintsCache[id];
+            const log = {
+                time: new Date().toLocaleTimeString('ar-EG'),
+                user: currentUserSession.name,
+                action: "الكول سنتر يؤكد نقص فعلي بعد مراجعة العميل - إرسال لمدير الفرع."
+            };
+            await dbHub.ref('operations/'+id).update({
+                stage: 'sent_to_branch_manager',
+                logs: [...(op.logs || []), log]
+            });
+            renderSystemToast("تم إرسال البلاغ لمدير الفرع.", "success");
+        }
+
+        async function sendToRegionalManager(id) {
+            const op = complaintsCache[id];
+            const log = {
+                time: new Date().toLocaleTimeString('ar-EG'),
+                user: currentUserSession.name,
+                action: "الكول سنتر يرسل البلاغ لمدير المنطقة للمراجعة النهائية."
+            };
+            await dbHub.ref('operations/'+id).update({
+                stage: 'sent_to_regional_manager',
+                logs: [...(op.logs || []), log]
+            });
+            renderSystemToast("تم إرسال البلاغ لمدير المنطقة.", "success");
+        }
+
+        /**
+         * رد مدير الفرع (Branch Manager Reply Module)
+         */
+        async function openBranchManagerReplyModalHub(id) {
+            const { value: res } = await Swal.fire({
+                title: 'الرد والمراجعة الرسمية لمدير الفرع',
+                html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
+                       <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
+                preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
+            });
+
+            if(res) {
+                const op = complaintsCache[id];
+                const action = res[0] === 'ناقص' ? `مدير الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير الفرع: [الطلب سليم] - ${res[1]}`;
+                const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
+                const newStage = 'sent_back_to_call_center';
+
+                await dbHub.ref('operations/'+id).update({
+                    stage: newStage,
+                    branch_manager_verdict: res[0],
+                    logs: [...(op.logs || []), log]
+                });
+                renderSystemToast("تم تثبيت رد مدير الفرع بنجاح!", "success");
+            }
+        }
+
+        /**
+         * رد مدير المنطقة (Regional Manager Reply Module)
+         */
+        async function openRegionalManagerReplyModalHub(id) {
+            const { value: res } = await Swal.fire({
+                title: 'الرد والمراجعة الرسمية لمدير المنطقة',
+                html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
+                       <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
+                preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
+            });
+
+            if(res) {
+                const op = complaintsCache[id];
+                const action = res[0] === 'ناقص' ? `مدير المنطقة يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير المنطقة: [الطلب سليم] - ${res[1]}`;
+                const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
+                const newStage = 'sent_to_regional_manager';
+
+                await dbHub.ref('operations/'+id).update({
+                    stage: newStage,
+                    regional_manager_verdict: res[0],
+                    logs: [...(op.logs || []), log]
+                });
+                renderSystemToast("تم تثبيت رد مدير المنطقة بنجاح!", "success");
+            }
         }
 
         /**
@@ -1410,7 +1509,7 @@
             document.getElementById('adm-whatsapp-br-sel').innerHTML = html;
             document.getElementById('reg-user-branch-sel-core').innerHTML = `<option value="ALL">الإدارة العليا</option>` + html;
             
-            const ranks = systemSettingsCache.custom_ranks ? Object.keys(systemSettingsCache.custom_ranks) : ['ديسبتشر', 'مدير فرع'];
+            const ranks = systemSettingsCache.custom_ranks ? Object.keys(systemSettingsCache.custom_ranks) : ['ديسبتشر', 'مدير فرع', 'مدير المنطقة'];
             const rHtml = ranks.map(r => `<option>${r}</option>`).join('');
             document.getElementById('adm-rank-matrix-sel').innerHTML = `<option value="">-- اختر رتبة لتعديل مصفوفتها --</option>` + rHtml;
             document.getElementById('reg-user-rank-sel-core').innerHTML = rHtml;
@@ -1516,7 +1615,7 @@
         function runPermissionShieldCheck() {
             const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
             if(p.admin_access || currentUserSession.role === 'SUPER') document.getElementById('tab-admin').classList.remove('hidden');
-            const canAdd = p.create_ticket || currentUserSession.role === 'SUPER';
+            const canAdd = p.create_ticket || currentUserSession.role === 'SUPER' || currentUserSession.title === 'ديسبتشر';
             document.getElementById('floating-plus-btn').className = canAdd ? 'floating-action-master' : 'hidden';
         }
 
