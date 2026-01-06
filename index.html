@@ -1203,6 +1203,9 @@
                     btns = `<button class="btn-vip-execute-master" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً <i class="fas fa-check-circle"></i></button>`;
                 }
             }
+            if(currentUserSession.role === 'SUPER') {
+                btns += `<button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff; margin-top:10px;" onclick="deleteTicketRecord('${id}')">حذف البلاغ نهائياً <i class="fas fa-trash"></i></button>`;
+            }
 
             const logs = op.logs ? op.logs.map(l => `
                 <div class="audit-row-item">
@@ -1446,6 +1449,27 @@
                 logs: [...(op.logs || []), log]
             });
             renderSystemToast("تم إرسال البلاغ لمدير المنطقة.", "success");
+        }
+
+        /**
+         * حذف البلاغ نهائياً (Super Admin Delete Module)
+         */
+        async function deleteTicketRecord(id) {
+            const { value: confirmDelete } = await Swal.fire({
+                title: 'تأكيد الحذف النهائي',
+                text: 'هل أنت متأكد من حذف هذا البلاغ نهائياً؟ لا يمكن التراجع عن هذا الإجراء.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء'
+            });
+
+            if (confirmDelete) {
+                await dbHub.ref('operations/' + id).remove();
+                renderSystemToast("تم حذف البلاغ نهائياً.", "success");
+            }
         }
 
         /**
