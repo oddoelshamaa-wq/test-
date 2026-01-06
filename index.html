@@ -1021,18 +1021,42 @@
             dbHub.ref('settings').on('value', snap => {
                 systemSettingsCache = snap.val() || {};
                 branchListCache = systemSettingsCache.branches ? Object.values(systemSettingsCache.branches) : [];
+
+                // إضافة الرتب الافتراضية والكول سنتر إذا لم تكن موجودة
+                if(!systemSettingsCache.custom_ranks) systemSettingsCache.custom_ranks = {};
+                const defaultRanks = ['ديسبتشر', 'مدير فرع', 'مدير المنطقة', 'كول سنتر'];
+                defaultRanks.forEach(rank => {
+                    if(!systemSettingsCache.custom_ranks[rank]) {
+                        dbHub.ref('settings/custom_ranks/' + rank).set(true);
+                        systemSettingsCache.custom_ranks[rank] = true;
+                    }
+                });
+                // إضافة صلاحيات الكول سنتر
+                if(!systemSettingsCache.permissions) systemSettingsCache.permissions = {};
+                if(!systemSettingsCache.permissions['كول سنتر']) {
+                    const ccPerms = {
+                        view_all: true,
+                        create_ticket: true,
+                        reply_ticket: false,
+                        daily_edit: false,
+                        admin_access: false
+                    };
+                    dbHub.ref('settings/permissions/كول سنتر').set(ccPerms);
+                    systemSettingsCache.permissions['كول سنتر'] = ccPerms;
+                }
+
                 syncUiDropdownSelections();
                 renderAdminBranchScrollBox();
                 renderAdminUsersScrollBox();
                 renderBranchWhatsappList();
-                loadDailySnapshotData(); 
+                loadDailySnapshotData();
                 runPermissionShieldCheck();
             });
 
             // مستمع البلاغات (الشكاوى والعمليات)
             dbHub.ref('operations').on('value', snap => {
                 complaintsCache = snap.val() || {};
-                renderLiveBroadcastMatrix(); 
+                renderLiveBroadcastMatrix();
                 runArchiveRefreshSequence();
             });
         }
