@@ -1233,6 +1233,12 @@
                         <span>🏷️ النوع: ${op.type}</span>
                     </div>
                     <div style="color:var(--success-glow); font-weight:950; margin-bottom:25px; font-size:1.4rem;">👨‍✈️ الطيار: ${op.driver || '---'}</div>
+                    <div style="color:var(--accent-navy); font-weight:950; margin-bottom:25px; font-size:1.2rem;">
+                        👤 المحرر: ${op.author || '---'}<br>
+                        👨‍💼 الديسبتشر: ${op.dispatcher_name || '---'}<br>
+                        👨‍💼 مدير الفرع: ${op.branch_manager_name || '---'}<br>
+                        👨‍💼 مدير المنطقة: ${op.regional_manager_name || '---'}
+                    </div>
                     <p style="background:rgba(0,0,0,0.65); padding:30px; border-radius:20px; border:2px solid rgba(255,255,255,0.1); font-size:1.4rem; line-height:1.8;">📝 ${op.msg}</p>
                     <div class="audit-logs-viewport">${logs}</div>
                     <div style="margin-top:40px;">${btns}</div>
@@ -1402,6 +1408,7 @@
                 const updateData = {
                     stage: newStage,
                     branch_verdict: res[0],
+                    dispatcher_name: currentUserSession.name,
                     logs: [...(op.logs || []), log]
                 };
                 if(res[0] === 'ناقص') {
@@ -1496,6 +1503,7 @@
                 await dbHub.ref('operations/'+id).update({
                     stage: newStage,
                     branch_manager_verdict: res[0],
+                    branch_manager_name: currentUserSession.name,
                     logs: [...(op.logs || []), log]
                 });
                 renderSystemToast("تم تثبيت رد مدير الفرع بنجاح!", "success");
@@ -1522,6 +1530,7 @@
                 await dbHub.ref('operations/'+id).update({
                     stage: newStage,
                     regional_manager_verdict: res[0],
+                    regional_manager_name: currentUserSession.name,
                     logs: [...(op.logs || []), log]
                 });
                 renderSystemToast("تم تثبيت رد مدير المنطقة بنجاح!", "success");
