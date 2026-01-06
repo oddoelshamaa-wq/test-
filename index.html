@@ -1396,16 +1396,20 @@
 
             if(res) {
                 const op = complaintsCache[id];
-                const action = res[0] === 'ناقص' ? `الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد الفرع: [الطلب سليم] - ${res[1]}`;
+                const action = res[0] === 'ناقص' ? `الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]} - تم أرشفة البلاغ تلقائياً.` : `رد الفرع: [الطلب سليم] - ${res[1]}`;
                 const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
                 const newStage = 'replied';
-
-                await dbHub.ref('operations/'+id).update({
+                const updateData = {
                     stage: newStage,
                     branch_verdict: res[0],
                     logs: [...(op.logs || []), log]
-                });
-                renderSystemToast("تم تثبيت رد الفرع بنجاح!", "success");
+                };
+                if(res[0] === 'ناقص') {
+                    updateData.status = 'done';
+                }
+
+                await dbHub.ref('operations/'+id).update(updateData);
+                renderSystemToast(res[0] === 'ناقص' ? "تم أرشفة البلاغ تلقائياً بسبب النقص الفعلي!" : "تم تثبيت رد الفرع بنجاح!", "success");
             }
         }
 
