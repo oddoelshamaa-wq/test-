@@ -410,137 +410,120 @@
             }
 
         /* ============================================================
-           تحديث شامل لاستجابة الموبايل - انسخ هذا الجزء وضعه بدلاً من القديم
+           تحديث شامل لاستجابة الموبايل - استبدل الجزء الخاص بـ Media Query بهذا الكود
            ============================================================ */
         @media (max-width: 768px) {
-            body { font-size: 14px; }
-
-            /* --- إصلاح زر القائمة (Hamburger) والملاحة على الموبايل --- */
-
-            /* 1. تصغير الزر ووضعه في زاوية مناسبة */
-            .hamburger-btn {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                width: 45px !important;
-                height: 45px !important;
-                top: 15px !important;
-                right: 15px !important;
-                font-size: 1.2rem !important;
-                border-radius: 12px !important; /* شكل عصري أكثر */
-                box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3) !important;
-                z-index: 2000 !important;
-            }
-
-            /* 1. إصلاح القائمة الجانبية (Sidebar) - كانت 600px وهذا سبب المشكلة */
-            .sidebar-complaint-master {
-                width: 100% !important; /* تأخذ عرض الشاشة بالكامل */
-                left: -100% !important; /* تختفي تماماً لليسار */
-                padding: 40px 20px !important;
-                border-right: none !important;
-                border-bottom: 8px solid var(--gold-master) !important;
-            }
-            .sidebar-complaint-master.open {
-                left: 0 !important;
-            }
-
-            /* 2. تصغير الخطوط الكبيرة جداً في صفحة الدخول والبث */
-            h1, .login-card-massive h1 {
-                font-size: 2rem !important;
-                margin-bottom: 15px !important;
-            }
-
-            .login-card-massive {
-                width: 95% !important;
-                padding: 40px 15px !important;
-            }
-
-            /* 3. إصلاح كروت البلاغات (Tickets) */
-            .ticket-visual-unit {
+            /* 1. ضبط الحاوية الرئيسية لتأخذ العرض الكامل */
+            .vip-master-container {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
                 padding: 15px !important;
-                margin-bottom: 20px !important;
+                padding-top: 80px !important; /* مساحة لزر الهامبرغر */
             }
 
-            /* تصغير رقم الأوردر الضخم في الصورة */
-            .ticket-visual-unit div[style*="font-size:3rem"],
-            .ticket-visual-unit div[style*="font-size: 3rem"] {
-                font-size: 1.6rem !important;
-                margin-bottom: 10px !important;
+            /* 2. ضبط القائمة الجانبية (Sidebar) لتختفي وتظهر بشكل صحيح */
+            .system-side-nav {
+                width: 280px !important;
+                right: -300px !important; /* مخفية لليمين */
+                top: 0 !important;
+                bottom: 0 !important;
+                height: 100vh !important;
+                border-radius: 0 !important;
+                transition: right 0.4s ease !important;
+                z-index: 3000 !important;
             }
 
-            /* جعل العميل والنوع يظهران فوق بعضهما بدلاً من التداخل */
-            .ticket-visual-unit div[style*="grid-template-columns: 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                gap: 8px !important;
+            .system-side-nav.open {
+                right: 0 !important;
             }
 
-            /* 4. ضبط المدخلات (Inputs) والقوائم */
+            /* 3. تصغير الخطوط والعناوين الضخمة */
+            h1, .login-card-massive h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .massive-glass-card h2,
+            .massive-glass-card h3 {
+                font-size: 1.4rem !important;
+            }
+
+            /* 4. معالجة كروت الفروع والبيانات (التي ظهرت في صورك) */
+            .daily-matrix-display {
+                grid-template-columns: 1fr !important; /* كارت واحد في كل صف */
+                gap: 15px !important;
+            }
+
+            .branch-data-card {
+                padding: 20px !important;
+            }
+
+            .massive-daily-input {
+                font-size: 2.5rem !important; /* تصغير رقم الأوردرات الضخم */
+            }
+
+            /* 5. ضبط المدخلات (Inputs) والتواريخ */
+            .massive-glass-card[style*="display:flex"] {
+                flex-direction: column !important; /* تحويل العناصر الجانبية لعمودية */
+                align-items: stretch !important;
+                padding: 20px !important;
+            }
+
+            .massive-glass-card div {
+                width: 100% !important;
+                margin-bottom: 10px;
+            }
+
             input, select, textarea {
                 padding: 12px !important;
                 font-size: 1rem !important;
-                margin-bottom: 15px !important;
             }
 
-            label { font-size: 0.9rem !important; margin-bottom: 5px !important; }
+            /* 6. ضبط كروت البلاغات (Tickets) */
+            .ticket-visual-unit {
+                padding: 15px !important;
+                border-right-width: 8px !important;
+            }
 
-            /* 5. تصغير الزر العائم (+) لكي لا يغطي المحتوى */
+            .ticket-visual-unit div[style*="font-size:3rem"] {
+                font-size: 1.5rem !important; /* تصغير رقم الأوردر */
+            }
+
+            .ticket-visual-unit div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important; /* اسم العميل والنوع فوق بعض */
+                gap: 10px !important;
+            }
+
+            /* 7. ضبط شاشة الدخول (Login) */
+            .login-card-massive {
+                width: 95% !important;
+                padding: 40px 20px !important;
+            }
+
+            /* 8. زر الإضافة العائم (+) */
             .floating-action-master {
-                width: 55px !important;
-                height: 55px !important;
+                width: 60px !important;
+                height: 60px !important;
                 font-size: 1.8rem !important;
                 bottom: 20px !important;
                 left: 20px !important;
             }
 
-            /* 2. إصلاح القائمة الجانبية التي تفتح عند الضغط على الزر */
-            .system-side-nav {
-                width: 80% !important; /* لا تأخذ عرض الشاشة بالكامل بل 80% */
-                max-width: 300px;
-                right: -100% !important; /* مخفية تماماً جهة اليمين */
-                top: 0 !important;
-                bottom: 0 !important;
-                height: 100vh !important;
-                border-radius: 0 !important;
-                padding: 60px 20px 20px !important; /* مساحة من الأعلى لكي لا يغطيها الزر */
-                background: rgba(13, 17, 23, 0.98) !important;
-                backdrop-filter: blur(15px) !important;
-                box-shadow: -10px 0 30px rgba(0,0,0,0.5) !important;
-                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            /* 9. زر القائمة (Hamburger) */
+            .hamburger-btn {
+                display: flex !important;
+                top: 15px !important;
+                right: 15px !important;
+                width: 45px !important;
+                height: 45px !important;
             }
 
-            /* عندما تكون القائمة مفتوحة */
-            .system-side-nav.open {
-                right: 0 !important;
+            /* 10. الرسوم البيانية */
+            .analytics-dual-layout {
+                grid-template-columns: 1fr !important;
             }
 
-            /* 3. تصغير عناصر القائمة لتناسب شاشة الموبايل */
-            .nav-link-vip {
-                padding: 12px 15px !important;
-                font-size: 0.95rem !important;
-                margin-bottom: 8px !important;
-                border-radius: 12px !important;
-            }
-
-            /* 4. تصغير الهوية (اللوجو) داخل القائمة */
-            .identity-matrix {
-                margin-bottom: 30px !important;
-                padding-bottom: 15px !important;
-            }
-
-            .identity-orb-vip {
-                width: 60px !important;
-                height: 60px !important;
-                font-size: 1.5rem !important;
-            }
-
-            .identity-labels h2 {
-                font-size: 1.1rem !important;
-            }
-
-            /* 7. تصغير الأيقونات والخطوط في الأزرار */
-            .btn-vip-execute-master {
+            .chart-viewport-massive {
                 padding: 15px !important;
-                font-size: 1.1rem !important;
             }
         }
 
