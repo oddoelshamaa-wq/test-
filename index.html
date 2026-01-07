@@ -955,6 +955,39 @@
             border: 6px solid var(--gold-master); 
         }
 
+        /* تنسيق بطاقة الدخول الأساسي */
+        .login-card-massive h1 {
+            font-size: 4rem;
+            letter-spacing: 3px;
+            word-wrap: break-word; /* لضمان عدم خروج النص عن الشاشة */
+        }
+
+        /* تعديلات الموبايل - أضف هذه السطور داخل @media (max-width: 768px) */
+        @media (max-width: 768px) {
+            .login-card-massive {
+                width: 90% !important;
+                padding: 40px 20px !important; /* تقليل الحواف الجانبية */
+            }
+
+            .login-card-massive h1 {
+                font-size: 2.2rem !important; /* تصغير حجم العنوان الكبير */
+                letter-spacing: 1px !important;
+            }
+
+            .login-card-massive p {
+                font-size: 1.1rem !important;
+                margin-bottom: 30px !important;
+            }
+
+            /* تصغير الدائرة الذهبية (VIP) في شاشة الدخول */
+            .login-card-massive .identity-orb-vip {
+                width: 100px !important;
+                height: 100px !important;
+                font-size: 2.5rem !important;
+                margin-bottom: 30px !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -965,7 +998,7 @@
     <!-- طبقة التظليل الجانبية -->
     <div id="master-dimmer" class="dimmer-overlay-master" onclick="closeSidebarControl()"></div>
 
-    <!-- 
+    <!--
         ========================================================================
         --- AUTHENTICATION CORE PORTAL ---
         بوابة الدخول المحمية بأعلى معايير التشفير والتحقق
@@ -973,14 +1006,24 @@
     -->
     <div id="auth-portal-mask">
         <div class="massive-glass-card login-card-massive">
-            <div class="identity-orb-vip" style="width:180px; height:180px; margin:0 auto 60px; font-size:6rem; cursor:default;">VIP</div>
-            <h1 style="color:var(--gold-master); font-weight:950; font-size:4rem; margin-bottom:20px; letter-spacing:3px;">CENTRAL COMMAND</h1>
-            <p style="color:var(--text-muted-core); margin-bottom:70px; font-weight:900; font-size:1.5rem;">نظام الرقابة والتحليل الإحصائي الفائق V45.0</p>
-            
-            <input type="text" id="auth-uid-master" placeholder="كود الهوية الرقمية (UID)">
-            <input type="password" id="auth-pwd-master" placeholder="الرمز السري المشفر (PWD)">
-            
-            <button class="btn-vip-execute-master" onclick="runSecurityAuthSequence()">ولوج المنظومة الرقمية <i class="fas fa-shield-halved"></i></button>
+            <!-- أزلنا الأحجام الثابتة من الـ style هنا -->
+            <div class="identity-orb-vip" style="margin: 0 auto; cursor: default;">VIP</div>
+
+            <h1 style="color:var(--gold-master); font-weight:950; margin-bottom:20px;">CENTRAL COMMAND</h1>
+
+            <p style="color:var(--text-muted-core); font-weight:900;">نظام الرقابة والتحليل الإحصائي الفائق V45.0</p>
+
+            <div style="margin-top: 40px;">
+                <label>كود الهوية الرقمية (UID)</label>
+                <input type="text" id="auth-uid-master" placeholder="UID">
+
+                <label>الرمز السري المشفر (PWD)</label>
+                <input type="password" id="auth-pwd-master" placeholder="PWD">
+
+                <button class="btn-vip-execute-master" onclick="runSecurityAuthSequence()">
+                    ولوج المنظومة الرقمية <i class="fas fa-shield-halved"></i>
+                </button>
+            </div>
         </div>
     </div>
 
