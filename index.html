@@ -415,6 +415,23 @@
         @media (max-width: 768px) {
             body { font-size: 14px; }
 
+            /* --- إصلاح زر القائمة (Hamburger) والملاحة على الموبايل --- */
+
+            /* 1. تصغير الزر ووضعه في زاوية مناسبة */
+            .hamburger-btn {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 45px !important;
+                height: 45px !important;
+                top: 15px !important;
+                right: 15px !important;
+                font-size: 1.2rem !important;
+                border-radius: 12px !important; /* شكل عصري أكثر */
+                box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3) !important;
+                z-index: 2000 !important;
+            }
+
             /* 1. إصلاح القائمة الجانبية (Sidebar) - كانت 600px وهذا سبب المشكلة */
             .sidebar-complaint-master {
                 width: 100% !important; /* تأخذ عرض الشاشة بالكامل */
@@ -428,11 +445,11 @@
             }
 
             /* 2. تصغير الخطوط الكبيرة جداً في صفحة الدخول والبث */
-            h1, .login-card-massive h1 { 
-                font-size: 2rem !important; 
-                margin-bottom: 15px !important; 
+            h1, .login-card-massive h1 {
+                font-size: 2rem !important;
+                margin-bottom: 15px !important;
             }
-            
+
             .login-card-massive {
                 width: 95% !important;
                 padding: 40px 15px !important;
@@ -475,13 +492,49 @@
                 left: 20px !important;
             }
 
-            /* 6. تعديل القائمة الجانبية للتنقل (Side Nav) */
+            /* 2. إصلاح القائمة الجانبية التي تفتح عند الضغط على الزر */
             .system-side-nav {
-                width: 260px !important;
-                right: -260px !important;
+                width: 80% !important; /* لا تأخذ عرض الشاشة بالكامل بل 80% */
+                max-width: 300px;
+                right: -100% !important; /* مخفية تماماً جهة اليمين */
+                top: 0 !important;
+                bottom: 0 !important;
+                height: 100vh !important;
+                border-radius: 0 !important;
+                padding: 60px 20px 20px !important; /* مساحة من الأعلى لكي لا يغطيها الزر */
+                background: rgba(13, 17, 23, 0.98) !important;
+                backdrop-filter: blur(15px) !important;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.5) !important;
+                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
+
+            /* عندما تكون القائمة مفتوحة */
             .system-side-nav.open {
                 right: 0 !important;
+            }
+
+            /* 3. تصغير عناصر القائمة لتناسب شاشة الموبايل */
+            .nav-link-vip {
+                padding: 12px 15px !important;
+                font-size: 0.95rem !important;
+                margin-bottom: 8px !important;
+                border-radius: 12px !important;
+            }
+
+            /* 4. تصغير الهوية (اللوجو) داخل القائمة */
+            .identity-matrix {
+                margin-bottom: 30px !important;
+                padding-bottom: 15px !important;
+            }
+
+            .identity-orb-vip {
+                width: 60px !important;
+                height: 60px !important;
+                font-size: 1.5rem !important;
+            }
+
+            .identity-labels h2 {
+                font-size: 1.1rem !important;
             }
 
             /* 7. تصغير الأيقونات والخطوط في الأزرار */
@@ -2193,8 +2246,16 @@
             }
 
             function toggleSidebar() {
-                const sb = document.getElementById('system-side-nav');
-                sb.classList.toggle('open');
+                const nav = document.getElementById('system-side-nav');
+                nav.classList.toggle('open');
+
+                // اختياري: تغيير شكل الأيقونة من (≡) إلى (X) عند الفتح
+                const btnIcon = document.querySelector('.hamburger-btn i');
+                if(nav.classList.contains('open')) {
+                    btnIcon.classList.replace('fa-bars', 'fa-xmark');
+                } else {
+                    btnIcon.classList.replace('fa-xmark', 'fa-bars');
+                }
             }
 
             function switchToAppModule(m) {
