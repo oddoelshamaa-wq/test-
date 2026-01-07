@@ -1,21 +1,4 @@
-    <!DOCTYPE html>
-    <html lang="ar" dir="rtl">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>VIP SYSTEM V45.0 | SIDE-MATRIX ARCHITECTURE</title>
-        
-        <!-- 
-            ========================================================================
-            --- GLOBAL EXTERNAL INFRASTRUCTURE ---
-            تجهيز المكتبات العالمية لضمان القوة التقنية الفائقة ومعالجة الرسوم البيانية
-            ========================================================================
-        -->
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        
-        <!-- مكتبات التنبيهات والرسوم البيانية والمعالجة -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -1171,7 +1154,7 @@
         <div id="system-toast-container"></div>
 
         <!-- طبقة التظليل الجانبية -->
-        <div id="master-dimmer" class="dimmer-overlay-master" onclick="closeSidebarControl()"></div>
+        <div id="master-dimmer" class="dimmer-overlay-master" onclick="closeAllMenus()"></div>
 
         <!--
             ========================================================================
@@ -1212,6 +1195,11 @@
             
             <!-- SIDEBAR NAVIGATION HUB -->
             <nav class="system-side-nav" id="system-side-nav">
+                <!-- زر إغلاق إضافي للموبايل يظهر في أعلى القائمة -->
+                <button onclick="closeAllMenus()" style="display:none;" id="mobile-close-btn" class="nav-link-vip">
+                    <i class="fas fa-times"></i> إغلاق القائمة
+                </button>
+
                 <div class="identity-matrix">
                     <div class="identity-orb-vip" id="ui-avatar-orb">V</div>
                     <div class="identity-labels">
@@ -2230,21 +2218,30 @@
 
             function toggleSidebar() {
                 const nav = document.getElementById('system-side-nav');
+                const dimmer = document.getElementById('master-dimmer');
+                
                 nav.classList.toggle('open');
-
-                // اختياري: تغيير شكل الأيقونة من (≡) إلى (X) عند الفتح
-                const btnIcon = document.querySelector('.hamburger-btn i');
-                if(nav.classList.contains('open')) {
-                    btnIcon.classList.replace('fa-bars', 'fa-xmark');
+                
+                // إظهار أو إخفاء الطبقة الشفافة خلف القائمة
+                if (nav.classList.contains('open')) {
+                    dimmer.style.display = 'block';
+                    dimmer.style.zIndex = '2500'; // التأكد أنها خلف القائمة وأمام المحتوى
                 } else {
-                    btnIcon.classList.replace('fa-xmark', 'fa-bars');
+                    dimmer.style.display = 'none';
                 }
+            }
+
+            // وظيفة لإغلاق كل شيء عند الضغط على الطبقة الشفافة أو الروابط
+            function closeAllMenus() {
+                document.getElementById('system-side-nav').classList.remove('open');
+                document.getElementById('sidebar-complaint-arc-hub').classList.remove('open');
+                document.getElementById('master-dimmer').style.display = 'none';
             }
 
             function switchToAppModule(m) {
                 document.querySelectorAll('.nav-link-vip').forEach(btn => btn.classList.remove('active'));
                 document.getElementById('tab-' + m).classList.add('active');
-                
+
                 ['live', 'daily', 'archive', 'reports', 'admin'].forEach(id => {
                     document.getElementById('module-view-' + id).classList.add('hidden');
                 });
@@ -2252,6 +2249,11 @@
 
                 if(m === 'reports') executeAdvancedAnalyticsSequence();
                 if(m === 'daily') loadDailySnapshotData();
+
+                // إغلاق القائمة بعد الضغط على الرابط في الموبايل
+                if(window.innerWidth <= 768) {
+                    closeAllMenus();
+                }
             }
 
             function renderSystemToast(m, type) {
