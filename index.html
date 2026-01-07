@@ -198,7 +198,7 @@
         /* استجابة للهواتف */
         @media (max-width: 768px) {
             body {
-                font-size: 14px; /* زيادة حجم الخط الأساسي لتحسين القراءة على الهواتف */
+                font-size: 12px; /* تقليل حجم الخط الأساسي لتناسب الشاشات الصغيرة */
             }
 
             .system-side-nav {
@@ -217,75 +217,78 @@
             .vip-master-container {
                 margin-right: 0;
                 margin-left: 0;
-                padding: 15px; /* تقليل الحشو لتوفير مساحة */
+                padding: 10px; /* تقليل الحشو أكثر */
             }
 
             .hamburger-btn {
                 display: block;
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
             }
 
             .floating-action-master {
-                left: 15px;
-                bottom: 15px;
-                width: 65px; /* زيادة قليلاً لسهولة الضغط */
-                height: 65px;
-                font-size: 2.2rem;
+                left: 10px;
+                bottom: 10px;
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
             }
 
             .identity-matrix {
-                margin-bottom: 25px;
-                padding-bottom: 15px;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
             }
 
             .identity-orb-vip {
-                width: 85px;
-                height: 85px;
-                font-size: 2.2rem;
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
             }
 
             .identity-labels h2 {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
 
             .nav-link-vip {
-                padding: 18px 22px; /* زيادة قليلاً لسهولة الضغط */
-                font-size: 1rem; /* زيادة من 0.9rem */
+                padding: 15px 20px;
+                font-size: 0.9rem;
             }
 
             .massive-glass-card {
-                padding: 18px; /* تقليل قليلاً */
-                border-radius: 18px;
+                padding: 15px;
+                border-radius: 15px;
             }
 
             .ticket-visual-unit {
-                padding: 18px;
+                padding: 15px;
             }
 
             .daily-matrix-display {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 15px;
             }
 
             .branch-data-card {
-                padding: 18px;
+                padding: 15px;
             }
 
             .massive-daily-input {
-                font-size: 3.2rem; /* زيادة قليلاً */
+                font-size: 2.5rem;
             }
 
             .stat-cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* تقليل الحد الأدنى */
-                gap: 18px;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
             }
 
             .analytics-pill-card h2 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
 
             .analytics-dual-layout {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 15px;
             }
 
             .admin-layout-flex {
@@ -293,47 +296,59 @@
             }
 
             .scrollable-admin-list {
-                max-height: 280px; /* تقليل قليلاً */
+                max-height: 250px;
             }
 
             .admin-row-item {
-                padding: 18px;
-                font-size: 1rem;
+                padding: 15px;
+                font-size: 0.9rem;
             }
 
             .btn-vip-execute-master {
-                padding: 18px;
-                font-size: 1.2rem;
+                padding: 15px;
+                font-size: 1.1rem;
+                min-height: 44px; /* ضمان سهولة الضغط */
             }
 
             .massive-glass-card h2 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
 
             .massive-glass-card h3 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
 
             .audit-row-item {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
             .toast-msg-vip {
-                padding: 18px 35px;
-                font-size: 1rem;
+                padding: 15px 30px;
+                font-size: 0.9rem;
             }
 
             .login-card-massive {
-                width: 95%; /* زيادة قليلاً لاستغلال الشاشة */
-                padding: 50px 35px;
+                width: 95%;
+                padding: 40px 30px;
             }
 
             .login-card-massive h1 {
-                font-size: 3.2rem;
+                font-size: 2.5rem;
             }
 
             .login-card-massive p {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
+            }
+
+            /* تعديل الشبكات لتناسب الشاشات الصغيرة */
+            #render-live-feed-matrix,
+            #render-archive-grid-hub {
+                grid-template-columns: 1fr !important; /* عرض كامل للبطاقات */
+                gap: 15px;
+            }
+
+            .ticket-visual-unit {
+                margin-bottom: 20px;
             }
         }
 
