@@ -1,2143 +1,2225 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP SYSTEM V45.0 | SIDE-MATRIX ARCHITECTURE</title>
-    
-    <!-- 
-        ========================================================================
-        --- GLOBAL EXTERNAL INFRASTRUCTURE ---
-        تجهيز المكتبات العالمية لضمان القوة التقنية الفائقة ومعالجة الرسوم البيانية
-        ========================================================================
-    -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- مكتبات التنبيهات والرسوم البيانية والمعالجة -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <style>
-        /* 
-           ========================================================================
-           --- CSS MASTER ARCHITECTURE: VIP SIDEBAR EDITION --- 
-           تم تحويل التصميم ليعتمد على قائمة جانبية ثابتة مع الحفاظ على الهوية
-           ========================================================================
-        */
-        :root {
-            /* الألوان الأساسية للنظام */
-            --primary-bg-core: #010409;
-            --glass-surface: rgba(13, 17, 23, 0.96);
-            
-            /* ألوان الهوية الذهبية */
-            --gold-master: #f59e0b;
-            --gold-bright: #fbbf24;
-            
-            /* ألوان الحالة والوظائف */
-            --accent-navy: #1d4ed8;
-            --success-glow: #10b981;
-            --danger-pulse: #ef4444;
-            
-            /* ألوان النصوص والحدود */
-            --text-pure: #f0f6fc;
-            --text-muted-core: #8b949e;
-            --border-glow-line: rgba(245, 158, 11, 0.28);
-            
-            /* إعدادات الأبعاد والتأثيرات */
-            --radius-massive: 28px;
-            --shadow-depth: 0 40px 80px rgba(0,0,0,0.85), inset 0 1px 2px rgba(255,255,255,0.06);
-            --font-stack: 'Cairo', sans-serif;
-            --transition-speed: 0.35s;
-            --sidebar-width: 340px; /* عرض القائمة الجانبية الثابت */
-        }
-
-        /* 
-           --- Global Smooth Animation Keyframes --- 
-           حركات انسيابية للعناصر
-        */
-        @keyframes slideRightFade { 
-            from { 
-                opacity: 0; 
-                transform: translateX(50px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateX(0); 
-            } 
-        }
-
-        @keyframes slideUpFade { 
-            from { 
-                opacity: 0; 
-                transform: translateY(40px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
-
-        @keyframes borderPulseGlow { 
-            0% { border-color: rgba(245, 158, 11, 0.2); } 
-            50% { border-color: rgba(245, 158, 11, 0.6); } 
-            100% { border-color: rgba(245, 158, 11, 0.2); } 
-        }
-
-        @keyframes rotateBrand { 
-            from { transform: rotate(0deg); } 
-            to { transform: rotate(360deg); } 
-        }
-
-        @keyframes slideInRight { 
-            from { transform: translateX(120%); opacity: 0; } 
-            to { transform: translateX(0); opacity: 1; } 
-        }
-
-        /* 
-           --- Scrollbar Performance Design --- 
-           تصميم شريط التمرير
-        */
-        ::-webkit-scrollbar { 
-            width: 10px; 
-        }
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VIP SYSTEM V45.0 | SIDE-MATRIX ARCHITECTURE</title>
         
-        ::-webkit-scrollbar-track { 
-            background: var(--primary-bg-core); 
-        }
+        <!-- 
+            ========================================================================
+            --- GLOBAL EXTERNAL INFRASTRUCTURE ---
+            تجهيز المكتبات العالمية لضمان القوة التقنية الفائقة ومعالجة الرسوم البيانية
+            ========================================================================
+        -->
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(var(--gold-master), #d97706); 
-            border-radius: 12px; 
-            border: 3px solid var(--primary-bg-core); 
-        }
+        <!-- مكتبات التنبيهات والرسوم البيانية والمعالجة -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        
+        <style>
+            /* 
+            ========================================================================
+            --- CSS MASTER ARCHITECTURE: VIP SIDEBAR EDITION --- 
+            تم تحويل التصميم ليعتمد على قائمة جانبية ثابتة مع الحفاظ على الهوية
+            ========================================================================
+            */
+            :root {
+                /* الألوان الأساسية للنظام */
+                --primary-bg-core: #010409;
+                --glass-surface: rgba(13, 17, 23, 0.96);
+                
+                /* ألوان الهوية الذهبية */
+                --gold-master: #f59e0b;
+                --gold-bright: #fbbf24;
+                
+                /* ألوان الحالة والوظائف */
+                --accent-navy: #1d4ed8;
+                --success-glow: #10b981;
+                --danger-pulse: #ef4444;
+                
+                /* ألوان النصوص والحدود */
+                --text-pure: #f0f6fc;
+                --text-muted-core: #8b949e;
+                --border-glow-line: rgba(245, 158, 11, 0.28);
+                
+                /* إعدادات الأبعاد والتأثيرات */
+                --radius-massive: 28px;
+                --shadow-depth: 0 40px 80px rgba(0,0,0,0.85), inset 0 1px 2px rgba(255,255,255,0.06);
+                --font-stack: 'Cairo', sans-serif;
+                --transition-speed: 0.35s;
+                --sidebar-width: 340px; /* عرض القائمة الجانبية الثابت */
+            }
 
-        /* 
-           --- Reset & Base Styles --- 
-        */
-        * {
-            box-sizing: border-box;
-            outline: none;
-            margin: 0;
-            padding: 0;
-            transition: var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-        }
+            /* 
+            --- Global Smooth Animation Keyframes --- 
+            حركات انسيابية للعناصر
+            */
+            @keyframes slideRightFade { 
+                from { 
+                    opacity: 0; 
+                    transform: translateX(50px); 
+                } 
+                to { 
+                    opacity: 1; 
+                    transform: translateX(0); 
+                } 
+            }
 
-        body {
-            font-family: var(--font-stack);
-            background: var(--primary-bg-core);
-            color: var(--text-pure);
-            min-height: 100vh;
-            overflow-x: hidden;
-            font-size: 10px;
-            background-image: 
-                radial-gradient(circle at 5% 5%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 95% 95%, rgba(29, 78, 216, 0.08) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
+            @keyframes slideUpFade { 
+                from { 
+                    opacity: 0; 
+                    transform: translateY(40px); 
+                } 
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0); 
+                } 
+            }
 
-        /*
-           --- NEW LAYOUT STRUCTURE (Sidebar + Content) ---
-        */
+            @keyframes borderPulseGlow { 
+                0% { border-color: rgba(245, 158, 11, 0.2); } 
+                50% { border-color: rgba(245, 158, 11, 0.6); } 
+                100% { border-color: rgba(245, 158, 11, 0.2); } 
+            }
 
-        /* 1. القائمة الجانبية الثابتة */
-        .system-side-nav {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            bottom: 30px;
-            width: var(--sidebar-width);
-            background: var(--glass-surface);
-            backdrop-filter: blur(55px);
-            border: 1px solid var(--border-glow-line);
-            border-radius: var(--radius-massive);
-            box-shadow: var(--shadow-depth);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            padding: 40px 30px;
-            overflow-y: auto;
-            animation: slideRightFade 0.8s ease-out;
-        }
+            @keyframes rotateBrand { 
+                from { transform: rotate(0deg); } 
+                to { transform: rotate(360deg); } 
+            }
 
-        /* 2. حاوية المحتوى الرئيسي (مزاحة لليسار) */
-        .vip-master-container {
-            margin-right: calc(var(--sidebar-width) + 60px); /* ترك مسافة للقائمة */
-            margin-left: 30px;
-            padding-top: 50px;
-            padding-bottom: 100px;
-            max-width: 100%;
-            animation: slideUpFade 0.7s ease-out;
-        }
+            @keyframes slideInRight { 
+                from { transform: translateX(120%); opacity: 0; } 
+                to { transform: translateX(0); opacity: 1; } 
+            }
 
-        /* زر الهامبرغر للهواتف */
-        .hamburger-btn {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1100;
-            background: var(--gold-master);
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
-            transition: 0.3s;
-        }
+            /* 
+            --- Scrollbar Performance Design --- 
+            تصميم شريط التمرير
+            */
+            ::-webkit-scrollbar { 
+                width: 10px; 
+            }
+            
+            ::-webkit-scrollbar-track { 
+                background: var(--primary-bg-core); 
+            }
+            
+            ::-webkit-scrollbar-thumb { 
+                background: linear-gradient(var(--gold-master), #d97706); 
+                border-radius: 12px; 
+                border: 3px solid var(--primary-bg-core); 
+            }
 
-        .hamburger-btn:hover {
-            transform: scale(1.1);
-        }
+            /* 
+            --- Reset & Base Styles --- 
+            */
+            * {
+                box-sizing: border-box;
+                outline: none;
+                margin: 0;
+                padding: 0;
+                transition: var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            }
 
-        /* استجابة للهواتف */
-        @media (max-width: 768px) {
             body {
-                font-size: 12px; /* تقليل حجم الخط الأساسي لتناسب الشاشات الصغيرة */
+                font-family: var(--font-stack);
+                background: var(--primary-bg-core);
+                color: var(--text-pure);
+                min-height: 100vh;
+                overflow-x: hidden;
+                font-size: 10px;
+                background-image: 
+                    radial-gradient(circle at 5% 5%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+                    radial-gradient(circle at 95% 95%, rgba(29, 78, 216, 0.08) 0%, transparent 50%);
+                background-attachment: fixed;
             }
 
+            /*
+            --- NEW LAYOUT STRUCTURE (Sidebar + Content) ---
+            */
+
+            /* 1. القائمة الجانبية الثابتة */
             .system-side-nav {
-                right: -100%;
-                width: 280px;
-                top: 0;
-                bottom: 0;
-                border-radius: 0;
-                transition: right 0.3s ease;
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                bottom: 30px;
+                width: var(--sidebar-width);
+                background: var(--glass-surface);
+                backdrop-filter: blur(55px);
+                border: 1px solid var(--border-glow-line);
+                border-radius: var(--radius-massive);
+                box-shadow: var(--shadow-depth);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                padding: 40px 30px;
+                overflow-y: auto;
+                animation: slideRightFade 0.8s ease-out;
             }
 
-            .system-side-nav.open {
-                right: 0;
-            }
-
+            /* 2. حاوية المحتوى الرئيسي (مزاحة لليسار) */
             .vip-master-container {
-                margin-right: 0;
-                margin-left: 0;
-                padding: 10px; /* تقليل الحشو أكثر */
+                margin-right: calc(var(--sidebar-width) + 60px); /* ترك مسافة للقائمة */
+                margin-left: 30px;
+                padding-top: 50px;
+                padding-bottom: 100px;
+                max-width: 100%;
+                animation: slideUpFade 0.7s ease-out;
             }
 
+            /* زر الهامبرغر للهواتف */
             .hamburger-btn {
-                display: block;
+                display: none;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1100;
+                background: var(--gold-master);
+                color: #000;
+                border: none;
+                border-radius: 50%;
                 width: 50px;
                 height: 50px;
                 font-size: 1.5rem;
+                cursor: pointer;
+                box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+                transition: 0.3s;
             }
 
-            .floating-action-master {
-                left: 10px;
-                bottom: 10px;
-                width: 60px;
-                height: 60px;
-                font-size: 2rem;
+            .hamburger-btn:hover {
+                transform: scale(1.1);
             }
 
-            .identity-matrix {
-                margin-bottom: 20px;
-                padding-bottom: 10px;
+            /* استجابة للهواتف */
+            @media (max-width: 768px) {
+                body {
+                    font-size: 12px; /* تقليل حجم الخط الأساسي لتناسب الشاشات الصغيرة */
+                }
+
+                .system-side-nav {
+                    right: -100%;
+                    width: 280px;
+                    top: 0;
+                    bottom: 0;
+                    border-radius: 0;
+                    transition: right 0.3s ease;
+                }
+
+                .system-side-nav.open {
+                    right: 0;
+                }
+
+                .vip-master-container {
+                    margin-right: 0;
+                    margin-left: 0;
+                    padding: 10px; /* تقليل الحشو أكثر */
+                }
+
+                .hamburger-btn {
+                    display: block;
+                    width: 50px;
+                    height: 50px;
+                    font-size: 1.5rem;
+                }
+
+                .floating-action-master {
+                    left: 10px;
+                    bottom: 10px;
+                    width: 60px;
+                    height: 60px;
+                    font-size: 2rem;
+                }
+
+                .identity-matrix {
+                    margin-bottom: 20px;
+                    padding-bottom: 10px;
+                }
+
+                .identity-orb-vip {
+                    width: 70px;
+                    height: 70px;
+                    font-size: 1.8rem;
+                }
+
+                .identity-labels h2 {
+                    font-size: 1.1rem;
+                }
+
+                .nav-link-vip {
+                    padding: 15px 20px;
+                    font-size: 0.9rem;
+                }
+
+                .massive-glass-card {
+                    padding: 15px;
+                    border-radius: 15px;
+                }
+
+                .ticket-visual-unit {
+                    padding: 15px;
+                }
+
+                .daily-matrix-display {
+                    grid-template-columns: 1fr;
+                    gap: 15px;
+                }
+
+                .branch-data-card {
+                    padding: 15px;
+                }
+
+                .massive-daily-input {
+                    font-size: 2.5rem;
+                }
+
+                .stat-cards-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                    gap: 15px;
+                }
+
+                .analytics-pill-card h2 {
+                    font-size: 1.8rem;
+                }
+
+                .analytics-dual-layout {
+                    grid-template-columns: 1fr;
+                    gap: 15px;
+                }
+
+                .admin-layout-flex {
+                    grid-template-columns: 1fr;
+                }
+
+                .scrollable-admin-list {
+                    max-height: 250px;
+                }
+
+                .admin-row-item {
+                    padding: 15px;
+                    font-size: 0.9rem;
+                }
+
+                .btn-vip-execute-master {
+                    padding: 15px;
+                    font-size: 1.1rem;
+                    min-height: 44px; /* ضمان سهولة الضغط */
+                }
+
+                .massive-glass-card h2 {
+                    font-size: 1.8rem;
+                }
+
+                .massive-glass-card h3 {
+                    font-size: 1.4rem;
+                }
+
+                .audit-row-item {
+                    font-size: 0.9rem;
+                }
+
+                .toast-msg-vip {
+                    padding: 15px 30px;
+                    font-size: 0.9rem;
+                }
+
+                .login-card-massive {
+                    width: 95%;
+                    padding: 40px 30px;
+                }
+
+                .login-card-massive h1 {
+                    font-size: 2.5rem;
+                }
+
+                .login-card-massive p {
+                    font-size: 1.1rem;
+                }
+
+                /* تعديل الشبكات لتناسب الشاشات الصغيرة */
+                #render-live-feed-matrix,
+                #render-archive-grid-hub {
+                    grid-template-columns: 1fr !important; /* عرض كامل للبطاقات */
+                    gap: 15px;
+                }
+
+                .ticket-visual-unit {
+                    margin-bottom: 20px;
+                }
+
+                /* 1. تصغير عنوان الصفحة الرئيسي */
+                #module-view-live h1 {
+                    font-size: 1.8rem !important;
+                    margin-bottom: 20px !important;
+                    justify-content: center;
+                }
+
+                /* 2. ضبط الكارت (Ticket Card) */
+                .ticket-visual-unit {
+                    padding: 20px !important;
+                    margin-bottom: 20px !important;
+                    border-right-width: 8px !important;
+                }
+
+                /* 3. تصغير اسم الفرع والتاريخ */
+                .ticket-visual-unit b {
+                    font-size: 1.2rem !important;
+                }
+
+                /* 4. معالجة رقم الأوردر (أهم نقطة في الصورة) */
+                /* استهدفنا الـ div الذي يحتوي على حجم 3rem في الكود */
+                .ticket-visual-unit div[style*="font-size:3rem"],
+                .ticket-visual-unit div[style*="font-size: 3rem"] {
+                    font-size: 1.6rem !important;
+                    margin-bottom: 15px !important;
+                }
+
+                /* 5. تحويل العميل والنوع من صف واحد إلى عمودين فوق بعض لمنع التداخل */
+                .ticket-visual-unit div[style*="grid-template-columns: 1fr 1fr"] {
+                    grid-template-columns: 1fr !important;
+                    gap: 10px !important;
+                    font-size: 1.1rem !important;
+                }
+
+                /* 6. تصغير نص الشكوى */
+                .ticket-visual-unit p {
+                    font-size: 1rem !important;
+                    padding: 15px !important;
+                    line-height: 1.5 !important;
+                }
+
+                /* 7. ضبط الأزرار لتناسب العرض */
+                .ticket-visual-unit .btn-vip-execute-master {
+                    font-size: 1rem !important;
+                    padding: 12px !important;
+                    margin-bottom: 10px;
+                }
+
+                /* 8. تصغير الزر العائم (+) لأنه ضخم في الصورة */
+                .floating-action-master {
+                    width: 60px !important;
+                    height: 60px !important;
+                    font-size: 2rem !important;
+                    bottom: 20px !important;
+                    left: 20px !important;
+                }
             }
 
-            .identity-orb-vip {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
+        /* ============================================================
+           تحديث شامل لاستجابة الموبايل - انسخ هذا الجزء وضعه بدلاً من القديم
+           ============================================================ */
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+
+            /* 1. إصلاح القائمة الجانبية (Sidebar) - كانت 600px وهذا سبب المشكلة */
+            .sidebar-complaint-master {
+                width: 100% !important; /* تأخذ عرض الشاشة بالكامل */
+                left: -100% !important; /* تختفي تماماً لليسار */
+                padding: 40px 20px !important;
+                border-right: none !important;
+                border-bottom: 8px solid var(--gold-master) !important;
+            }
+            .sidebar-complaint-master.open {
+                left: 0 !important;
             }
 
-            .identity-labels h2 {
-                font-size: 1.1rem;
+            /* 2. تصغير الخطوط الكبيرة جداً في صفحة الدخول والبث */
+            h1, .login-card-massive h1 { 
+                font-size: 2rem !important; 
+                margin-bottom: 15px !important; 
             }
-
-            .nav-link-vip {
-                padding: 15px 20px;
-                font-size: 0.9rem;
-            }
-
-            .massive-glass-card {
-                padding: 15px;
-                border-radius: 15px;
-            }
-
-            .ticket-visual-unit {
-                padding: 15px;
-            }
-
-            .daily-matrix-display {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .branch-data-card {
-                padding: 15px;
-            }
-
-            .massive-daily-input {
-                font-size: 2.5rem;
-            }
-
-            .stat-cards-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
-            }
-
-            .analytics-pill-card h2 {
-                font-size: 1.8rem;
-            }
-
-            .analytics-dual-layout {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .admin-layout-flex {
-                grid-template-columns: 1fr;
-            }
-
-            .scrollable-admin-list {
-                max-height: 250px;
-            }
-
-            .admin-row-item {
-                padding: 15px;
-                font-size: 0.9rem;
-            }
-
-            .btn-vip-execute-master {
-                padding: 15px;
-                font-size: 1.1rem;
-                min-height: 44px; /* ضمان سهولة الضغط */
-            }
-
-            .massive-glass-card h2 {
-                font-size: 1.8rem;
-            }
-
-            .massive-glass-card h3 {
-                font-size: 1.4rem;
-            }
-
-            .audit-row-item {
-                font-size: 0.9rem;
-            }
-
-            .toast-msg-vip {
-                padding: 15px 30px;
-                font-size: 0.9rem;
-            }
-
+            
             .login-card-massive {
-                width: 95%;
-                padding: 40px 30px;
+                width: 95% !important;
+                padding: 40px 15px !important;
             }
 
-            .login-card-massive h1 {
-                font-size: 2.5rem;
-            }
-
-            .login-card-massive p {
-                font-size: 1.1rem;
-            }
-
-            /* تعديل الشبكات لتناسب الشاشات الصغيرة */
-            #render-live-feed-matrix,
-            #render-archive-grid-hub {
-                grid-template-columns: 1fr !important; /* عرض كامل للبطاقات */
-                gap: 15px;
-            }
-
+            /* 3. إصلاح كروت البلاغات (Tickets) */
             .ticket-visual-unit {
-                margin-bottom: 20px;
-            }
-
-            /* 1. تصغير عنوان الصفحة الرئيسي */
-            #module-view-live h1 {
-                font-size: 1.8rem !important;
+                padding: 15px !important;
                 margin-bottom: 20px !important;
-                justify-content: center;
             }
 
-            /* 2. ضبط الكارت (Ticket Card) */
-            .ticket-visual-unit {
-                padding: 20px !important;
-                margin-bottom: 20px !important;
-                border-right-width: 8px !important;
-            }
-
-            /* 3. تصغير اسم الفرع والتاريخ */
-            .ticket-visual-unit b {
-                font-size: 1.2rem !important;
-            }
-
-            /* 4. معالجة رقم الأوردر (أهم نقطة في الصورة) */
-            /* استهدفنا الـ div الذي يحتوي على حجم 3rem في الكود */
+            /* تصغير رقم الأوردر الضخم في الصورة */
             .ticket-visual-unit div[style*="font-size:3rem"],
             .ticket-visual-unit div[style*="font-size: 3rem"] {
                 font-size: 1.6rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* جعل العميل والنوع يظهران فوق بعضهما بدلاً من التداخل */
+            .ticket-visual-unit div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+
+            /* 4. ضبط المدخلات (Inputs) والقوائم */
+            input, select, textarea {
+                padding: 12px !important;
+                font-size: 1rem !important;
                 margin-bottom: 15px !important;
             }
 
-            /* 5. تحويل العميل والنوع من صف واحد إلى عمودين فوق بعض لمنع التداخل */
-            .ticket-visual-unit div[style*="grid-template-columns: 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                gap: 10px !important;
-                font-size: 1.1rem !important;
-            }
+            label { font-size: 0.9rem !important; margin-bottom: 5px !important; }
 
-            /* 6. تصغير نص الشكوى */
-            .ticket-visual-unit p {
-                font-size: 1rem !important;
-                padding: 15px !important;
-                line-height: 1.5 !important;
-            }
-
-            /* 7. ضبط الأزرار لتناسب العرض */
-            .ticket-visual-unit .btn-vip-execute-master {
-                font-size: 1rem !important;
-                padding: 12px !important;
-                margin-bottom: 10px;
-            }
-
-            /* 8. تصغير الزر العائم (+) لأنه ضخم في الصورة */
+            /* 5. تصغير الزر العائم (+) لكي لا يغطي المحتوى */
             .floating-action-master {
-                width: 60px !important;
-                height: 60px !important;
-                font-size: 2rem !important;
+                width: 55px !important;
+                height: 55px !important;
+                font-size: 1.8rem !important;
                 bottom: 20px !important;
                 left: 20px !important;
+            }
+
+            /* 6. تعديل القائمة الجانبية للتنقل (Side Nav) */
+            .system-side-nav {
+                width: 260px !important;
+                right: -260px !important;
+            }
+            .system-side-nav.open {
+                right: 0 !important;
+            }
+
+            /* 7. تصغير الأيقونات والخطوط في الأزرار */
+            .btn-vip-execute-master {
+                padding: 15px !important;
+                font-size: 1.1rem !important;
             }
         }
 
         /* تحسينات إضافية للشاشات الصغيرة جداً (الهواتف الصغيرة) */
         @media (max-width: 480px) {
-            body {
-                font-size: 12px; /* تقليل الخط الأساسي */
+                body {
+                    font-size: 12px; /* تقليل الخط الأساسي */
+                }
+
+                .system-side-nav {
+                    width: 100%; /* عرض كامل للشاشة */
+                }
+
+                .vip-master-container {
+                    padding: 10px; /* تقليل الحشو */
+                }
+
+                .hamburger-btn {
+                    width: 45px;
+                    height: 45px;
+                    font-size: 1.2rem;
+                }
+
+                .floating-action-master {
+                    width: 55px;
+                    height: 55px;
+                    font-size: 1.8rem;
+                    left: 10px;
+                    bottom: 10px;
+                }
+
+                .massive-glass-card {
+                    padding: 12px;
+                    border-radius: 12px;
+                }
+
+                .ticket-visual-unit {
+                    padding: 12px;
+                }
+
+                .massive-daily-input {
+                    font-size: 2.5rem;
+                }
+
+                .btn-vip-execute-master {
+                    padding: 12px;
+                    font-size: 1rem;
+                }
+
+                .login-card-massive {
+                    width: 98%;
+                    padding: 30px 20px;
+                }
+
+                .login-card-massive h1 {
+                    font-size: 2.5rem;
+                }
+
+                .login-card-massive p {
+                    font-size: 1rem;
+                }
+
+                .identity-orb-vip {
+                    width: 70px;
+                    height: 70px;
+                    font-size: 1.8rem;
+                }
+
+                .identity-labels h2 {
+                    font-size: 1.1rem;
+                }
+
+                .nav-link-vip {
+                    padding: 12px 15px;
+                    font-size: 0.9rem;
+                }
+
+                .stat-cards-grid {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+
+                .analytics-pill-card h2 {
+                    font-size: 1.8rem;
+                }
+
+                .analytics-dual-layout {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+
+                .admin-layout-flex {
+                    grid-template-columns: 1fr;
+                }
+
+                .scrollable-admin-list {
+                    max-height: 200px;
+                }
+
+                .admin-row-item {
+                    padding: 12px;
+                    font-size: 0.9rem;
+                }
+
+                .toast-msg-vip {
+                    padding: 12px 25px;
+                    font-size: 0.9rem;
+                }
+
+                .audit-logs-viewport {
+                    padding: 20px;
+                    max-height: 200px;
+                }
+
+                .audit-row-item {
+                    font-size: 0.9rem;
+                }
+
+                .chart-viewport-massive {
+                    padding: 40px;
+                }
+
+                .sidebar-complaint-master {
+                    width: 100%;
+                    padding: 50px 20px;
+                }
+
+                .sidebar-complaint-master h2 {
+                    font-size: 2.5rem;
+                    margin-bottom: 40px;
+                }
             }
 
-            .system-side-nav {
-                width: 100%; /* عرض كامل للشاشة */
-            }
-
-            .vip-master-container {
-                padding: 10px; /* تقليل الحشو */
-            }
-
-            .hamburger-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-            }
-
-            .floating-action-master {
-                width: 55px;
-                height: 55px;
-                font-size: 1.8rem;
-                left: 10px;
-                bottom: 10px;
-            }
-
-            .massive-glass-card {
-                padding: 12px;
-                border-radius: 12px;
-            }
-
-            .ticket-visual-unit {
-                padding: 12px;
-            }
-
-            .massive-daily-input {
-                font-size: 2.5rem;
-            }
-
-            .btn-vip-execute-master {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .login-card-massive {
-                width: 98%;
-                padding: 30px 20px;
-            }
-
-            .login-card-massive h1 {
-                font-size: 2.5rem;
-            }
-
-            .login-card-massive p {
-                font-size: 1rem;
+            /* 
+            --- Sidebar Elements Styling --- 
+            */
+            .identity-matrix {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-bottom: 50px;
+                padding-bottom: 30px;
+                border-bottom: 2px solid rgba(255,255,255,0.05);
             }
 
             .identity-orb-vip {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
+                width: 110px;
+                height: 110px;
+                background: linear-gradient(135deg, var(--gold-master), #b45309);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 950;
+                color: #000;
+                font-size: 3rem;
+                border: 6px solid rgba(255,255,255,0.2);
+                box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
+                cursor: pointer;
+                margin-bottom: 20px;
             }
 
-            .identity-labels h2 {
-                font-size: 1.1rem;
+            .identity-orb-vip:hover { 
+                animation: rotateBrand 2s infinite linear; 
             }
 
+            .identity-labels h2 { 
+                font-size: 1.6rem; 
+                letter-spacing: 0.8px; 
+                font-weight: 900; 
+                line-height: 1.2; 
+            }
+
+            .identity-labels p { 
+                color: var(--gold-master); 
+                font-weight: 800; 
+                font-size: 0.95rem; 
+                margin-top: 8px; 
+                opacity: 0.9; 
+            }
+
+            /* تعديل القائمة لتكون عمودية */
+            .nav-hub-menu { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 15px; 
+                flex: 1; /* تأخذ المساحة المتبقية */
+            }
+            
             .nav-link-vip {
-                padding: 12px 15px;
-                font-size: 0.9rem;
-            }
-
-            .stat-cards-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .analytics-pill-card h2 {
-                font-size: 1.8rem;
-            }
-
-            .analytics-dual-layout {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .admin-layout-flex {
-                grid-template-columns: 1fr;
-            }
-
-            .scrollable-admin-list {
-                max-height: 200px;
-            }
-
-            .admin-row-item {
-                padding: 12px;
-                font-size: 0.9rem;
-            }
-
-            .toast-msg-vip {
-                padding: 12px 25px;
-                font-size: 0.9rem;
-            }
-
-            .audit-logs-viewport {
-                padding: 20px;
-                max-height: 200px;
-            }
-
-            .audit-row-item {
-                font-size: 0.9rem;
-            }
-
-            .chart-viewport-massive {
-                padding: 40px;
-            }
-
-            .sidebar-complaint-master {
+                background: rgba(255,255,255,0.03);
+                border: 1px solid transparent;
+                color: var(--text-muted-core);
+                padding: 20px 25px;
+                border-radius: 18px;
+                cursor: pointer;
+                font-family: var(--font-stack);
+                font-weight: 800;
+                font-size: 1.1rem;
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                transition: 0.3s;
                 width: 100%;
-                padding: 50px 20px;
             }
 
-            .sidebar-complaint-master h2 {
-                font-size: 2.5rem;
+            .nav-link-vip:hover, .nav-link-vip.active {
+                background: rgba(245, 158, 11, 0.15);
+                color: var(--gold-master);
+                border-color: var(--border-glow-line);
+                transform: translateX(-8px); /* حركة لليسار عند التحويم */
+                box-shadow: none;
+            }
+            
+            .nav-link-vip.active {
+                background: var(--gold-master);
+                color: #000;
+                box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+            }
+
+            /* زر الخروج في الأسفل */
+            .logout-btn-sidebar {
+                margin-top: auto; /* دفع للأسفل */
+                background: rgba(239, 68, 68, 0.1) !important;
+                color: var(--danger-pulse) !important;
+                border: 1px solid rgba(239, 68, 68, 0.3) !important;
+                justify-content: center;
+            }
+
+            .logout-btn-sidebar:hover {
+                background: var(--danger-pulse) !important;
+                color: #fff !important;
+                transform: translateY(-5px);
+            }
+
+            /* 
+            --- Cards & UI Elements --- 
+            */
+            .massive-glass-card {
+                background: var(--glass-surface);
+                backdrop-filter: blur(55px);
+                border: 1px solid var(--border-glow-line);
+                border-radius: var(--radius-massive);
+                box-shadow: var(--shadow-depth);
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* 
+            --- Floating Command Center (Adjusted for Sidebar Layout) --- 
+            */
+            .floating-action-master {
+                position: fixed;
+                bottom: 50px;
+                left: 50px; /* على اليسار بعيداً عن السايدبار */
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background: var(--gold-master);
+                color: #000;
+                font-size: 3.5rem;
+                border: none;
+                cursor: pointer;
+                z-index: 2000;
+                box-shadow: 0 40px 90px rgba(245, 158, 11, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .floating-action-master:hover { 
+                transform: scale(1.1) rotate(90deg); 
+            }
+
+            /* 
+            --- Sidebar Panel Core (For New Complaint) --- 
+            */
+            .sidebar-complaint-master {
+                position: fixed;
+                top: 0;
+                left: -700px; /* تغيير الاتجاه ليفتح من اليسار */
+                right: auto;
+                width: 600px;
+                height: 100%;
+                background: #0b0e14;
+                border-right: 12px solid var(--gold-master); /* البوردر يمين */
+                border-left: none;
+                z-index: 2600;
+                padding: 70px;
+                transition: 1s cubic-bezier(0.7, 0, 0.1, 1);
+                box-shadow: 60px 0 200px rgba(0,0,0,1);
+                overflow-y: auto;
+            }
+
+            .sidebar-complaint-master.open { 
+                left: 0; 
+            }
+
+            .dimmer-overlay-master {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(20px);
+                z-index: 2599;
+                display: none;
+            }
+
+            /* 
+            --- Ticket Presentation UI --- 
+            */
+            .ticket-visual-unit {
+                padding: 50px;
+                border-radius: var(--radius-massive);
+                border-right: 15px solid var(--gold-master);
                 margin-bottom: 40px;
+                background: rgba(22, 27, 34, 0.92);
+                transition: 0.5s;
+                border-top: 1px solid rgba(255,255,255,0.08);
+                position: relative;
             }
-        }
 
-        /* 
-           --- Sidebar Elements Styling --- 
-        */
-        .identity-matrix {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 50px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid rgba(255,255,255,0.05);
-        }
+            .ticket-visual-unit:hover { 
+                transform: translateY(-10px) scale(1.01); 
+                background: rgba(35, 41, 51, 1);
+                border-color: var(--gold-bright); 
+            }
 
-        .identity-orb-vip {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, var(--gold-master), #b45309);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 950;
-            color: #000;
-            font-size: 3rem;
-            border: 6px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
+            .badge-status-glow { 
+                padding: 10px 20px; 
+                border-radius: 12px; 
+                font-size: 0.95rem; 
+                font-weight: 950; 
+                display: inline-block; 
+                margin-bottom: 30px; 
+                letter-spacing: 1px; 
+                box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            }
 
-        .identity-orb-vip:hover { 
-            animation: rotateBrand 2s infinite linear; 
-        }
+            /* 
+            --- Daily Stats Grid Matrix --- 
+            */
+            .daily-matrix-display { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
+                gap: 40px; 
+            }
 
-        .identity-labels h2 { 
-            font-size: 1.6rem; 
-            letter-spacing: 0.8px; 
-            font-weight: 900; 
-            line-height: 1.2; 
-        }
+            .branch-data-card { 
+                padding: 50px; 
+                text-align: center; 
+                border-bottom: 10px solid var(--gold-master); 
+                background: rgba(255,255,255,0.04); 
+                border-radius: var(--radius-massive); 
+                transition: 0.6s; 
+                border: 1px solid rgba(255,255,255,0.05); 
+            }
 
-        .identity-labels p { 
-            color: var(--gold-master); 
-            font-weight: 800; 
-            font-size: 0.95rem; 
-            margin-top: 8px; 
-            opacity: 0.9; 
-        }
+            .branch-data-card:hover { 
+                transform: translateY(-10px); 
+                background: rgba(255,255,255,0.08); 
+            }
 
-        /* تعديل القائمة لتكون عمودية */
-        .nav-hub-menu { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            flex: 1; /* تأخذ المساحة المتبقية */
-        }
-        
-        .nav-link-vip {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid transparent;
-            color: var(--text-muted-core);
-            padding: 20px 25px;
-            border-radius: 18px;
-            cursor: pointer;
-            font-family: var(--font-stack);
-            font-weight: 800;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            transition: 0.3s;
-            width: 100%;
-        }
+            .massive-daily-input { 
+                font-size: 5rem; 
+                font-weight: 950; 
+                color: var(--gold-master); 
+                width: 100%; 
+                text-align: center; 
+                background: transparent; 
+                border: none; 
+                border-bottom: 6px solid var(--border-glow-line); 
+                margin-top: 30px; 
+                transition: 0.4s; 
+            }
 
-        .nav-link-vip:hover, .nav-link-vip.active {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--gold-master);
-            border-color: var(--border-glow-line);
-            transform: translateX(-8px); /* حركة لليسار عند التحويم */
-            box-shadow: none;
-        }
-        
-        .nav-link-vip.active {
-            background: var(--gold-master);
-            color: #000;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
-        }
+            .massive-daily-input:focus { 
+                border-color: var(--gold-bright); 
+                color: var(--gold-bright); 
+                outline: none; 
+            }
 
-        /* زر الخروج في الأسفل */
-        .logout-btn-sidebar {
-            margin-top: auto; /* دفع للأسفل */
-            background: rgba(239, 68, 68, 0.1) !important;
-            color: var(--danger-pulse) !important;
-            border: 1px solid rgba(239, 68, 68, 0.3) !important;
-            justify-content: center;
-        }
+            /* 
+            --- Audit Logs Visualization --- 
+            */
+            .audit-logs-viewport { 
+                margin-top: 40px; 
+                padding: 30px; 
+                background: rgba(0,0,0,0.55); 
+                border-radius: 20px; 
+                max-height: 300px; 
+                overflow-y: auto; 
+                border: 2px solid rgba(255,255,255,0.08); 
+            }
 
-        .logout-btn-sidebar:hover {
-            background: var(--danger-pulse) !important;
-            color: #fff !important;
-            transform: translateY(-5px);
-        }
+            .audit-row-item { 
+                padding: 18px 0; 
+                border-bottom: 1px solid rgba(255,255,255,0.08); 
+                font-size: 1.1rem; 
+                color: var(--text-muted-core); 
+                line-height: 1.6; 
+            }
 
-        /* 
-           --- Cards & UI Elements --- 
-        */
-        .massive-glass-card {
-            background: var(--glass-surface);
-            backdrop-filter: blur(55px);
-            border: 1px solid var(--border-glow-line);
-            border-radius: var(--radius-massive);
-            box-shadow: var(--shadow-depth);
-            position: relative;
-            overflow: hidden;
-        }
+            .audit-row-item b { color: var(--gold-master); }
+            .audit-row-item .timestamp-label { 
+                display: block; 
+                font-size: 0.85rem; 
+                opacity: 0.6; 
+                margin-top: 6px; 
+                color: var(--accent-navy); 
+                font-weight: 800; 
+            }
 
-        /* 
-           --- Floating Command Center (Adjusted for Sidebar Layout) --- 
-        */
-        .floating-action-master {
-            position: fixed;
-            bottom: 50px;
-            left: 50px; /* على اليسار بعيداً عن السايدبار */
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--gold-master);
-            color: #000;
-            font-size: 3.5rem;
-            border: none;
-            cursor: pointer;
-            z-index: 2000;
-            box-shadow: 0 40px 90px rgba(245, 158, 11, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+            /* 
+            --- Form Control Mastery --- 
+            */
+            label { 
+                display: block; 
+                font-size: 1.1rem; 
+                color: var(--text-muted-core); 
+                margin-bottom: 12px; 
+                font-weight: 900; 
+            }
 
-        .floating-action-master:hover { 
-            transform: scale(1.1) rotate(90deg); 
-        }
+            input, select, textarea { 
+                width: 100%; 
+                padding: 20px; 
+                border-radius: 18px; 
+                background: #010409; 
+                border: 2px solid var(--border-glow-line); 
+                color: white; 
+                margin-bottom: 25px; 
+                font-family: var(--font-stack); 
+                font-size: 1.1rem; 
+                box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
+            }
 
-        /* 
-           --- Sidebar Panel Core (For New Complaint) --- 
-        */
-        .sidebar-complaint-master {
-            position: fixed;
-            top: 0;
-            left: -700px; /* تغيير الاتجاه ليفتح من اليسار */
-            right: auto;
-            width: 600px;
-            height: 100%;
-            background: #0b0e14;
-            border-right: 12px solid var(--gold-master); /* البوردر يمين */
-            border-left: none;
-            z-index: 2600;
-            padding: 70px;
-            transition: 1s cubic-bezier(0.7, 0, 0.1, 1);
-            box-shadow: 60px 0 200px rgba(0,0,0,1);
-            overflow-y: auto;
-        }
+            input:focus, select:focus { 
+                border-color: var(--gold-master); 
+                box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); 
+            }
 
-        .sidebar-complaint-master.open { 
-            left: 0; 
-        }
+            .btn-vip-execute-master { 
+                background: var(--gold-master); 
+                color: #000; 
+                border: none; 
+                padding: 25px; 
+                border-radius: 20px; 
+                font-weight: 950; 
+                cursor: pointer; 
+                width: 100%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                gap: 15px; 
+                font-size: 1.4rem; 
+                box-shadow: 0 20px 50px rgba(245, 158, 11, 0.4); 
+                transition: 0.4s; 
+            }
 
-        .dimmer-overlay-master {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(20px);
-            z-index: 2599;
-            display: none;
-        }
+            .btn-vip-execute-master:hover { 
+                filter: brightness(1.2); 
+                transform: translateY(-5px); 
+            }
 
-        /* 
-           --- Ticket Presentation UI --- 
-        */
-        .ticket-visual-unit {
-            padding: 50px;
-            border-radius: var(--radius-massive);
-            border-right: 15px solid var(--gold-master);
-            margin-bottom: 40px;
-            background: rgba(22, 27, 34, 0.92);
-            transition: 0.5s;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            position: relative;
-        }
+            /* 
+            --- Analytics Module UI --- 
+            */
+            .stat-cards-grid { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+                gap: 40px; 
+                margin-bottom: 80px; 
+            }
 
-        .ticket-visual-unit:hover { 
-            transform: translateY(-10px) scale(1.01); 
-            background: rgba(35, 41, 51, 1);
-            border-color: var(--gold-bright); 
-        }
+            .analytics-pill-card { 
+                padding: 50px; 
+                text-align: center; 
+                border-radius: 30px; 
+                background: rgba(255,255,255,0.05); 
+                border: 1px solid var(--border-glow-line); 
+                transition: 0.5s; 
+            }
 
-        .badge-status-glow { 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            font-size: 0.95rem; 
-            font-weight: 950; 
-            display: inline-block; 
-            margin-bottom: 30px; 
-            letter-spacing: 1px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
+            .analytics-pill-card:hover { 
+                background: rgba(255,255,255,0.08); 
+                transform: scale(1.05); 
+            }
 
-        /* 
-           --- Daily Stats Grid Matrix --- 
-        */
-        .daily-matrix-display { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
-            gap: 40px; 
-        }
+            .analytics-pill-card h2 { 
+                font-size: 3.5rem; 
+                font-weight: 950; 
+                color: var(--gold-master); 
+            }
 
-        .branch-data-card { 
-            padding: 50px; 
-            text-align: center; 
-            border-bottom: 10px solid var(--gold-master); 
-            background: rgba(255,255,255,0.04); 
-            border-radius: var(--radius-massive); 
-            transition: 0.6s; 
-            border: 1px solid rgba(255,255,255,0.05); 
-        }
+            .analytics-pill-card p { 
+                font-size: 1.2rem; 
+                color: var(--text-muted-core); 
+                font-weight: 800; 
+                margin-top: 15px; 
+            }
 
-        .branch-data-card:hover { 
-            transform: translateY(-10px); 
-            background: rgba(255,255,255,0.08); 
-        }
+            /* --- Chart Massive Viewer --- */
+            .chart-viewport-massive { 
+                padding: 60px; 
+                background: rgba(0,0,0,0.45); 
+                border-radius: 40px; 
+                border: 2px solid var(--border-glow-line); 
+                position: relative; 
+            }
 
-        .massive-daily-input { 
-            font-size: 5rem; 
-            font-weight: 950; 
-            color: var(--gold-master); 
-            width: 100%; 
-            text-align: center; 
-            background: transparent; 
-            border: none; 
-            border-bottom: 6px solid var(--border-glow-line); 
-            margin-top: 30px; 
-            transition: 0.4s; 
-        }
-
-        .massive-daily-input:focus { 
-            border-color: var(--gold-bright); 
-            color: var(--gold-bright); 
-            outline: none; 
-        }
-
-        /* 
-           --- Audit Logs Visualization --- 
-        */
-        .audit-logs-viewport { 
-            margin-top: 40px; 
-            padding: 30px; 
-            background: rgba(0,0,0,0.55); 
-            border-radius: 20px; 
-            max-height: 300px; 
-            overflow-y: auto; 
-            border: 2px solid rgba(255,255,255,0.08); 
-        }
-
-        .audit-row-item { 
-            padding: 18px 0; 
-            border-bottom: 1px solid rgba(255,255,255,0.08); 
-            font-size: 1.1rem; 
-            color: var(--text-muted-core); 
-            line-height: 1.6; 
-        }
-
-        .audit-row-item b { color: var(--gold-master); }
-        .audit-row-item .timestamp-label { 
-            display: block; 
-            font-size: 0.85rem; 
-            opacity: 0.6; 
-            margin-top: 6px; 
-            color: var(--accent-navy); 
-            font-weight: 800; 
-        }
-
-        /* 
-           --- Form Control Mastery --- 
-        */
-        label { 
-            display: block; 
-            font-size: 1.1rem; 
-            color: var(--text-muted-core); 
-            margin-bottom: 12px; 
-            font-weight: 900; 
-        }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 20px; 
-            border-radius: 18px; 
-            background: #010409; 
-            border: 2px solid var(--border-glow-line); 
-            color: white; 
-            margin-bottom: 25px; 
-            font-family: var(--font-stack); 
-            font-size: 1.1rem; 
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
-        }
-
-        input:focus, select:focus { 
-            border-color: var(--gold-master); 
-            box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); 
-        }
-
-        .btn-vip-execute-master { 
-            background: var(--gold-master); 
-            color: #000; 
-            border: none; 
-            padding: 25px; 
-            border-radius: 20px; 
-            font-weight: 950; 
-            cursor: pointer; 
-            width: 100%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 15px; 
-            font-size: 1.4rem; 
-            box-shadow: 0 20px 50px rgba(245, 158, 11, 0.4); 
-            transition: 0.4s; 
-        }
-
-        .btn-vip-execute-master:hover { 
-            filter: brightness(1.2); 
-            transform: translateY(-5px); 
-        }
-
-        /* 
-           --- Analytics Module UI --- 
-        */
-        .stat-cards-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 40px; 
-            margin-bottom: 80px; 
-        }
-
-        .analytics-pill-card { 
-            padding: 50px; 
-            text-align: center; 
-            border-radius: 30px; 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid var(--border-glow-line); 
-            transition: 0.5s; 
-        }
-
-        .analytics-pill-card:hover { 
-            background: rgba(255,255,255,0.08); 
-            transform: scale(1.05); 
-        }
-
-        .analytics-pill-card h2 { 
-            font-size: 3.5rem; 
-            font-weight: 950; 
-            color: var(--gold-master); 
-        }
-
-        .analytics-pill-card p { 
-            font-size: 1.2rem; 
-            color: var(--text-muted-core); 
-            font-weight: 800; 
-            margin-top: 15px; 
-        }
-
-        /* --- Chart Massive Viewer --- */
-        .chart-viewport-massive { 
-            padding: 60px; 
-            background: rgba(0,0,0,0.45); 
-            border-radius: 40px; 
-            border: 2px solid var(--border-glow-line); 
-            position: relative; 
-        }
-
-        .analytics-dual-layout { 
-            display: grid; 
-            grid-template-columns: 1.5fr 1fr; 
-            gap: 40px; 
-            margin-top: 50px; 
-        }
-
-        /* 
-           --- Admin Matrix Hub --- 
-        */
-        .admin-layout-flex { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 60px; 
-        }
-        
-        @media(min-width: 1600px) { 
-            .admin-layout-flex { 
+            .analytics-dual-layout { 
+                display: grid; 
                 grid-template-columns: 1.5fr 1fr; 
-            } 
-        }
-
-        .scrollable-admin-list { 
-            max-height: 400px; 
-            overflow-y: auto; 
-            border: 2px solid var(--border-glow-line); 
-            border-radius: 20px; 
-            padding: 25px; 
-            background: rgba(0,0,0,0.3); 
-        }
-
-        .admin-row-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
-            transition: 0.4s; 
-        }
-
-        .admin-row-item:hover { 
-            background: rgba(255,255,255,0.05); 
-        }
-
-        /* 
-           --- System Toast Notification --- 
-        */
-        #system-toast-container { 
-            position: fixed; 
-            bottom: 40px; 
-            left: 40px; /* مكان التنبيه في اليسار */
-            z-index: 6000; 
-            right: auto; 
-        }
-
-        .toast-msg-vip { 
-            background: var(--gold-master); 
-            color: #000; 
-            padding: 20px 40px; 
-            border-radius: 15px; 
-            font-weight: 950; 
-            box-shadow: 0 20px 45px rgba(0,0,0,0.7); 
-            margin-top: 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; 
-        }
-
-        .hidden { 
-            display: none !important; 
-        }
-
-        /* 
-           --- Login Portal Arc --- 
-        */
-        #auth-portal-mask { 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: #000; 
-            z-index: 9999; 
-            position: fixed; 
-            inset: 0; 
-        }
-
-        .login-card-massive { 
-            width: 650px; 
-            padding: 100px 80px; 
-            text-align: center; 
-            border: 6px solid var(--gold-master); 
-        }
-
-        /* تنسيق بطاقة الدخول الأساسي */
-        .login-card-massive h1 {
-            font-size: 4rem;
-            letter-spacing: 3px;
-            word-wrap: break-word; /* لضمان عدم خروج النص عن الشاشة */
-        }
-
-        /* تعديلات الموبايل - أضف هذه السطور داخل @media (max-width: 768px) */
-        @media (max-width: 768px) {
-            .login-card-massive {
-                width: 90% !important;
-                padding: 40px 20px !important; /* تقليل الحواف الجانبية */
+                gap: 40px; 
+                margin-top: 50px; 
             }
 
+            /* 
+            --- Admin Matrix Hub --- 
+            */
+            .admin-layout-flex { 
+                display: grid; 
+                grid-template-columns: 1fr; 
+                gap: 60px; 
+            }
+            
+            @media(min-width: 1600px) { 
+                .admin-layout-flex { 
+                    grid-template-columns: 1.5fr 1fr; 
+                } 
+            }
+
+            .scrollable-admin-list { 
+                max-height: 400px; 
+                overflow-y: auto; 
+                border: 2px solid var(--border-glow-line); 
+                border-radius: 20px; 
+                padding: 25px; 
+                background: rgba(0,0,0,0.3); 
+            }
+
+            .admin-row-item { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                padding: 20px; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+                transition: 0.4s; 
+            }
+
+            .admin-row-item:hover { 
+                background: rgba(255,255,255,0.05); 
+            }
+
+            /* 
+            --- System Toast Notification --- 
+            */
+            #system-toast-container { 
+                position: fixed; 
+                bottom: 40px; 
+                left: 40px; /* مكان التنبيه في اليسار */
+                z-index: 6000; 
+                right: auto; 
+            }
+
+            .toast-msg-vip { 
+                background: var(--gold-master); 
+                color: #000; 
+                padding: 20px 40px; 
+                border-radius: 15px; 
+                font-weight: 950; 
+                box-shadow: 0 20px 45px rgba(0,0,0,0.7); 
+                margin-top: 15px; 
+                display: flex; 
+                align-items: center; 
+                gap: 15px; 
+                animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; 
+            }
+
+            .hidden { 
+                display: none !important; 
+            }
+
+            /* 
+            --- Login Portal Arc --- 
+            */
+            #auth-portal-mask { 
+                height: 100vh; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                background: #000; 
+                z-index: 9999; 
+                position: fixed; 
+                inset: 0; 
+            }
+
+            .login-card-massive { 
+                width: 650px; 
+                padding: 100px 80px; 
+                text-align: center; 
+                border: 6px solid var(--gold-master); 
+            }
+
+            /* تنسيق بطاقة الدخول الأساسي */
             .login-card-massive h1 {
-                font-size: 2.2rem !important; /* تصغير حجم العنوان الكبير */
-                letter-spacing: 1px !important;
+                font-size: 4rem;
+                letter-spacing: 3px;
+                word-wrap: break-word; /* لضمان عدم خروج النص عن الشاشة */
             }
 
-            .login-card-massive p {
-                font-size: 1.1rem !important;
-                margin-bottom: 30px !important;
+            /* تعديلات الموبايل - أضف هذه السطور داخل @media (max-width: 768px) */
+            @media (max-width: 768px) {
+                .login-card-massive {
+                    width: 90% !important;
+                    padding: 40px 20px !important; /* تقليل الحواف الجانبية */
+                }
+
+                .login-card-massive h1 {
+                    font-size: 2.2rem !important; /* تصغير حجم العنوان الكبير */
+                    letter-spacing: 1px !important;
+                }
+
+                .login-card-massive p {
+                    font-size: 1.1rem !important;
+                    margin-bottom: 30px !important;
+                }
+
+                /* تصغير الدائرة الذهبية (VIP) في شاشة الدخول */
+                .login-card-massive .identity-orb-vip {
+                    width: 100px !important;
+                    height: 100px !important;
+                    font-size: 2.5rem !important;
+                    margin-bottom: 30px !important;
+                }
             }
 
-            /* تصغير الدائرة الذهبية (VIP) في شاشة الدخول */
-            .login-card-massive .identity-orb-vip {
-                width: 100px !important;
-                height: 100px !important;
-                font-size: 2.5rem !important;
-                margin-bottom: 30px !important;
-            }
-        }
+        </style>
+    </head>
+    <body>
 
-    </style>
-</head>
-<body>
+        <!-- محرك التنبيهات النظامي -->
+        <div id="system-toast-container"></div>
 
-    <!-- محرك التنبيهات النظامي -->
-    <div id="system-toast-container"></div>
+        <!-- طبقة التظليل الجانبية -->
+        <div id="master-dimmer" class="dimmer-overlay-master" onclick="closeSidebarControl()"></div>
 
-    <!-- طبقة التظليل الجانبية -->
-    <div id="master-dimmer" class="dimmer-overlay-master" onclick="closeSidebarControl()"></div>
+        <!--
+            ========================================================================
+            --- AUTHENTICATION CORE PORTAL ---
+            بوابة الدخول المحمية بأعلى معايير التشفير والتحقق
+            ========================================================================
+        -->
+        <div id="auth-portal-mask">
+            <div class="massive-glass-card login-card-massive">
+                <!-- أزلنا الأحجام الثابتة من الـ style هنا -->
+                <div class="identity-orb-vip" style="margin: 0 auto; cursor: default;">VIP</div>
 
-    <!--
-        ========================================================================
-        --- AUTHENTICATION CORE PORTAL ---
-        بوابة الدخول المحمية بأعلى معايير التشفير والتحقق
-        ========================================================================
-    -->
-    <div id="auth-portal-mask">
-        <div class="massive-glass-card login-card-massive">
-            <!-- أزلنا الأحجام الثابتة من الـ style هنا -->
-            <div class="identity-orb-vip" style="margin: 0 auto; cursor: default;">VIP</div>
+                <h1 style="color:var(--gold-master); font-weight:950; margin-bottom:20px;">CENTRAL COMMAND</h1>
 
-            <h1 style="color:var(--gold-master); font-weight:950; margin-bottom:20px;">CENTRAL COMMAND</h1>
+                <p style="color:var(--text-muted-core); font-weight:900;">نظام الرقابة والتحليل الإحصائي الفائق V45.0</p>
 
-            <p style="color:var(--text-muted-core); font-weight:900;">نظام الرقابة والتحليل الإحصائي الفائق V45.0</p>
+                <div style="margin-top: 40px;">
+                    <label>كود الهوية الرقمية (UID)</label>
+                    <input type="text" id="auth-uid-master" placeholder="UID">
 
-            <div style="margin-top: 40px;">
-                <label>كود الهوية الرقمية (UID)</label>
-                <input type="text" id="auth-uid-master" placeholder="UID">
+                    <label>الرمز السري المشفر (PWD)</label>
+                    <input type="password" id="auth-pwd-master" placeholder="PWD">
 
-                <label>الرمز السري المشفر (PWD)</label>
-                <input type="password" id="auth-pwd-master" placeholder="PWD">
-
-                <button class="btn-vip-execute-master" onclick="runSecurityAuthSequence()">
-                    ولوج المنظومة الرقمية <i class="fas fa-shield-halved"></i>
-                </button>
+                    <button class="btn-vip-execute-master" onclick="runSecurityAuthSequence()">
+                        ولوج المنظومة الرقمية <i class="fas fa-shield-halved"></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 
-        ========================================================================
-        --- MAIN MASTER INTERFACE ENGINE (SIDEBAR ARCHITECTURE) ---
-        محرك واجهة المستخدم الرئيسي بعد عملية المصادقة الأمنية مع القائمة الجانبية
-        ========================================================================
-    -->
-    <div id="main-system-viewport" class="hidden">
-        
-        <!-- SIDEBAR NAVIGATION HUB -->
-        <nav class="system-side-nav">
-            <div class="identity-matrix">
-                <div class="identity-orb-vip" id="ui-avatar-orb">V</div>
-                <div class="identity-labels">
-                    <h2 id="ui-user-fullname">---</h2>
-                    <span id="ui-user-rank-label" style="display:block; margin-top:5px; color:var(--text-muted-core); font-size:0.9rem;">---</span>
-                </div>
-            </div>
+        <!-- 
+            ========================================================================
+            --- MAIN MASTER INTERFACE ENGINE (SIDEBAR ARCHITECTURE) ---
+            محرك واجهة المستخدم الرئيسي بعد عملية المصادقة الأمنية مع القائمة الجانبية
+            ========================================================================
+        -->
+        <div id="main-system-viewport" class="hidden">
             
-            <div class="nav-hub-menu">
-                <button class="nav-link-vip active" id="tab-live" onclick="switchToAppModule('live')">
-                    <i class="fas fa-satellite-dish"></i> البث المباشر
-                </button>
-                <button class="nav-link-vip" id="tab-daily" onclick="switchToAppModule('daily')">
-                    <i class="fas fa-calendar-check"></i> يومية الأوردرات
-                </button>
-                <button class="nav-link-vip" id="tab-archive" onclick="switchToAppModule('archive')">
-                    <i class="fas fa-database"></i> أرشيف السحابة
-                </button>
-                <button class="nav-link-vip" id="tab-reports" onclick="switchToAppModule('reports')">
-                    <i class="fas fa-chart-line"></i> تقارير الكفاءة
-                </button>
-                <button class="nav-link-vip hidden" id="tab-admin" onclick="switchToAppModule('admin')">
-                    <i class="fas fa-crown"></i> الإدارة العليا
-                </button>
-                
-                <button class="nav-link-vip logout-btn-sidebar" onclick="runSystemLogoutSequence()">
-                    <i class="fas fa-power-off"></i> تسجيل الخروج
-                </button>
-            </div>
-        </nav>
-
-        <!-- MAIN CONTENT CONTAINER (Pushed to Left) -->
-        <div class="vip-master-container">
-
-            <!-- Hamburger Menu for Mobile -->
-            <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <!-- Floating Command Trigger (Left Side now) -->
-            <button class="floating-action-master" id="floating-plus-btn" onclick="openSidebarControl()">
-                <i class="fas fa-plus"></i>
-            </button>
-
-            <!-- 
-                ========================================================================
-                --- MODULE: LIVE BROADCAST (بث البلاغات المباشر) ---
-                ========================================================================
-            -->
-            <div id="module-view-live">
-                <h1 style="font-size:3rem; margin-bottom:40px; color:var(--text-pure); display:flex; align-items:center; gap:20px;">
-                    <i class="fas fa-satellite-dish" style="color:var(--gold-master)"></i> البث الحي للبلاغات
-                </h1>
-                <div id="render-live-feed-matrix" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(700px, 1fr)); gap:50px;"></div>
-            </div>
-
-            <!-- 
-                ========================================================================
-                --- MODULE: DAILY SNAPSHOT MATRIX (اليومية المتجددة لكل تاريخ) ---
-                ========================================================================
-            -->
-            <div id="module-view-daily" class="hidden">
-                <div class="massive-glass-card" style="padding:80px; margin-bottom:80px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:80px;">
-                        <div>
-                            <h2 style="color:var(--gold-master); font-size:3.5rem; margin:0;"><i class="fas fa-calculator-combined"></i> محرك مدخلات اليومية</h2>
-                            <p style="color:var(--text-muted-core); font-size:1.4rem; margin-top:20px;">سجلات منفصلة ومحمية بالكامل لكل تاريخ.</p>
-                        </div>
-                        <div style="width:350px; text-align:left;">
-                            <label>تاريخ السجلات:</label>
-                            <input type="date" id="daily-master-date-picker" style="margin:0; font-size:1.4rem; font-weight:950;" onchange="loadDailySnapshotData()">
-                        </div>
-                    </div>
-                    <!-- شبكة إدخال أوردرات الفروع لهذا التاريخ -->
-                    <div id="render-daily-grid-hub" class="daily-matrix-display"></div>
-                </div>
-            </div>
-
-            <!-- 
-                ========================================================================
-                --- MODULE: ARCHIVE HUB (أرشيف السحابة والبحث التاريخي) ---
-                ========================================================================
-            -->
-            <div id="module-view-archive" class="hidden">
-                <div class="massive-glass-card" style="padding:60px; display:flex; gap:40px; margin-bottom:60px; align-items:flex-end;">
-                    <div style="flex:1;"><label>مراجعة من تاريخ:</label><input type="date" id="archive-date-from" onchange="runArchiveRefreshSequence()"></div>
-                    <div style="flex:1;"><label>مراجعة إلى تاريخ:</label><input type="date" id="archive-date-to" onchange="runArchiveRefreshSequence()"></div>
-                    <button class="btn-vip-execute-master" style="width:300px;" onclick="runArchiveRefreshSequence()">تحديث الأرشيف <i class="fas fa-rotate"></i></button>
-                </div>
-                <div id="render-archive-grid-hub" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(700px, 1fr)); gap:50px;"></div>
-            </div>
-
-            <!-- 
-                ========================================================================
-                --- MODULE: ANALYTICS COMMAND HUB (تحليل الكفاءة ومعدل الخطأ) ---
-                ========================================================================
-            -->
-            <div id="module-view-reports" class="hidden">
-                <div class="massive-glass-card" style="padding:50px; display:flex; gap:40px; margin-bottom:60px; align-items:flex-end;">
-                    <div style="flex:1;"><label>فترة التحليل من:</label><input type="date" id="reports-date-from"></div>
-                    <div style="flex:1;"><label>إلى:</label><input type="date" id="reports-date-to"></div>
-                    <button class="btn-vip-execute-master" style="width:250px;" onclick="executeAdvancedAnalyticsSequence()">بدء التحليل <i class="fas fa-brain"></i></button>
-                    <button class="btn-vip-execute-master" style="width:200px; background:var(--accent-navy); color:white;" onclick="exportReportsToExcel()">Excel <i class="fas fa-file-excel"></i></button>
-                </div>
-                
-                <!-- كروت الإحصائيات الذكية -->
-                <div id="render-analytics-stat-row" class="stat-cards-grid"></div>
-                
-                <!-- منطقة الرسوم البيانية المزدوجة -->
-                <div class="analytics-dual-layout">
-                    <!-- الرسم البياني الرئيسي (معدل الخطأ) -->
-                    <div class="massive-glass-card chart-viewport-massive">
-                        <h3 style="color:var(--gold-master); font-size:2.2rem; margin-bottom:30px;">📊 معدل الخطأ لكل 100 أوردر</h3>
-                        <p style="color:var(--text-muted-core); margin-bottom:30px; font-size:1.1rem;">مقارنة دقيقة بين الشكاوى وإجمالي الأوردرات.</p>
-                        <canvas id="master-reports-canvas" style="max-height: 500px;"></canvas>
-                    </div>
-
-                    <!-- الرسم البياني الجديد (تحليل أنواع الشكاوى) -->
-                    <div class="massive-glass-card chart-viewport-massive">
-                        <h3 style="color:var(--gold-master); font-size:2.2rem; margin-bottom:30px;">📉 تحليل تصنيف الشكاوى</h3>
-                        <p style="color:var(--text-muted-core); margin-bottom:30px; font-size:1.1rem;">التوزيع النسبي للأسباب.</p>
-                        <div style="height: 400px; display:flex; justify-content:center;">
-                            <canvas id="master-types-canvas"></canvas>
-                        </div>
+            <!-- SIDEBAR NAVIGATION HUB -->
+            <nav class="system-side-nav">
+                <div class="identity-matrix">
+                    <div class="identity-orb-vip" id="ui-avatar-orb">V</div>
+                    <div class="identity-labels">
+                        <h2 id="ui-user-fullname">---</h2>
+                        <span id="ui-user-rank-label" style="display:block; margin-top:5px; color:var(--text-muted-core); font-size:0.9rem;">---</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- 
-                ========================================================================
-                --- MODULE: ADMIN CONTROL MATRIX (الإدارة المركزية المطلقة) ---
-                ========================================================================
-            -->
-            <div id="module-view-admin" class="hidden">
-                <div class="admin-layout-flex">
+                
+                <div class="nav-hub-menu">
+                    <button class="nav-link-vip active" id="tab-live" onclick="switchToAppModule('live')">
+                        <i class="fas fa-satellite-dish"></i> البث المباشر
+                    </button>
+                    <button class="nav-link-vip" id="tab-daily" onclick="switchToAppModule('daily')">
+                        <i class="fas fa-calendar-check"></i> يومية الأوردرات
+                    </button>
+                    <button class="nav-link-vip" id="tab-archive" onclick="switchToAppModule('archive')">
+                        <i class="fas fa-database"></i> أرشيف السحابة
+                    </button>
+                    <button class="nav-link-vip" id="tab-reports" onclick="switchToAppModule('reports')">
+                        <i class="fas fa-chart-line"></i> تقارير الكفاءة
+                    </button>
+                    <button class="nav-link-vip hidden" id="tab-admin" onclick="switchToAppModule('admin')">
+                        <i class="fas fa-crown"></i> الإدارة العليا
+                    </button>
                     
-                    <!-- التحكم بالفروع والاتصالات الرقمية -->
-                    <div class="massive-glass-card" style="padding:80px;">
-                        <h3 style="color:var(--gold-master); font-size:2.4rem; margin-bottom:60px;"><i class="fas fa-store-slash"></i> الفروع والاتصالات</h3>
-                        <div style="display:flex; gap:25px; margin-bottom:40px;">
-                            <input id="adm-branch-name-input" placeholder="اسم الفرع الجديد">
-                            <button class="btn-vip-execute-master" style="width:180px;" onclick="addSystemBranchCore()">إدراج</button>
-                        </div>
-                        <div id="adm-branches-scroll-box" class="scrollable-admin-list" style="margin-bottom:60px;"></div>
-                        
-                        <hr style="border:0; border-top:2px solid var(--border-glow-line); margin:50px 0;">
-                        
-                        <h3 style="color:var(--gold-master); font-size:2rem; margin-bottom:40px;"><i class="fab fa-whatsapp"></i> واتساب الإشعارات</h3>
-                        <select id="adm-whatsapp-br-sel" onchange="renderBranchWhatsappList()"></select>
-                        <div style="display:flex; gap:25px;">
-                            <input id="adm-whatsapp-phone-input" placeholder="مثال: 2010XXXXXXXX">
-                            <button class="btn-vip-execute-master" style="width:180px; background:var(--success-glow); color:#000;" onclick="bindNewWhatsappToBranch()">+ ربط</button>
-                        </div>
-                        <div id="adm-whatsapp-scroll-box" class="scrollable-admin-list" style="margin-top:40px;"></div>
-                    </div>
+                    <button class="nav-link-vip logout-btn-sidebar" onclick="runSystemLogoutSequence()">
+                        <i class="fas fa-power-off"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </nav>
 
-                    <!-- التحكم بالرتب وصلاحيات الكوادر البشرية -->
-                    <div class="massive-glass-card" style="padding:80px;">
-                        <h3 style="color:var(--gold-master); font-size:2.4rem; margin-bottom:60px;"><i class="fas fa-shield-halved"></i> مصفوفة الرتب والصلاحيات</h3>
-                        <div style="display:flex; gap:25px; margin-bottom:40px;">
-                            <input id="adm-rank-name-input" placeholder="اسم رتبة جديدة">
-                            <button class="btn-vip-execute-master" style="width:180px;" onclick="registerNewRankTitleCore()">إضافة</button>
-                        </div>
-                        <select id="adm-rank-matrix-sel" onchange="loadRankPermissionsMatrixHub()"></select>
-                        <div id="adm-permissions-grid-hub" class="hidden" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; background:rgba(0,0,0,0.6); padding:40px; border-radius:20px; margin-top:35px; border:2px solid var(--border-glow-line);">
-                            <label><input type="checkbox" id="perm-view-all"> رؤية شاملة</label>
-                            <label><input type="checkbox" id="perm-create-ticket"> إنشاء بلاغات</label>
-                            <label><input type="checkbox" id="perm-reply-ticket"> صلاحية الرد</label>
-                            <label><input type="checkbox" id="perm-daily-edit"> تحرير اليومية</label>
-                            <label><input type="checkbox" id="perm-admin-access"> دخول الإدارة</label>
-                            <button class="btn-vip-execute-master" style="grid-column: span 2; margin-top:30px;" onclick="saveRankPermissionsSequence()">تثبيت الصلاحيات</button>
-                        </div>
+            <!-- MAIN CONTENT CONTAINER (Pushed to Left) -->
+            <div class="vip-master-container">
 
-                        <hr style="border:0; border-top:2px solid var(--border-glow-line); margin:60px 0;">
-                        
-                        <h3 style="color:var(--gold-master); font-size:2rem; margin-bottom:50px;">👤 تسجيل عضو VIP</h3>
-                        <input id="reg-user-id-core" placeholder="كود ID الدخول">
-                        <input id="reg-user-fullname-core" placeholder="الاسم الرباعي للموظف">
-                        <select id="reg-user-rank-sel-core"></select>
-                        <select id="reg-user-branch-sel-core"></select>
-                        <input id="reg-user-pass-core" type="password" placeholder="كلمة المرور المشفرة">
-                        <button class="btn-vip-execute-master" onclick="registerNewUserToSystemSequence()">إدراج وتفعيل العضوية</button>
-                        <div id="adm-users-scroll-box" class="scrollable-admin-list" style="margin-top:50px;"></div>
+                <!-- Hamburger Menu for Mobile -->
+                <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Floating Command Trigger (Left Side now) -->
+                <button class="floating-action-master" id="floating-plus-btn" onclick="openSidebarControl()">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+                <!-- 
+                    ========================================================================
+                    --- MODULE: LIVE BROADCAST (بث البلاغات المباشر) ---
+                    ========================================================================
+                -->
+                <div id="module-view-live">
+                    <h1 style="font-size:3rem; margin-bottom:40px; color:var(--text-pure); display:flex; align-items:center; gap:20px;">
+                        <i class="fas fa-satellite-dish" style="color:var(--gold-master)"></i> البث الحي للبلاغات
+                    </h1>
+                    <div id="render-live-feed-matrix" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(700px, 1fr)); gap:50px;"></div>
+                </div>
+
+                <!-- 
+                    ========================================================================
+                    --- MODULE: DAILY SNAPSHOT MATRIX (اليومية المتجددة لكل تاريخ) ---
+                    ========================================================================
+                -->
+                <div id="module-view-daily" class="hidden">
+                    <div class="massive-glass-card" style="padding:80px; margin-bottom:80px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:80px;">
+                            <div>
+                                <h2 style="color:var(--gold-master); font-size:3.5rem; margin:0;"><i class="fas fa-calculator-combined"></i> محرك مدخلات اليومية</h2>
+                                <p style="color:var(--text-muted-core); font-size:1.4rem; margin-top:20px;">سجلات منفصلة ومحمية بالكامل لكل تاريخ.</p>
+                            </div>
+                            <div style="width:350px; text-align:left;">
+                                <label>تاريخ السجلات:</label>
+                                <input type="date" id="daily-master-date-picker" style="margin:0; font-size:1.4rem; font-weight:950;" onchange="loadDailySnapshotData()">
+                            </div>
+                        </div>
+                        <!-- شبكة إدخال أوردرات الفروع لهذا التاريخ -->
+                        <div id="render-daily-grid-hub" class="daily-matrix-display"></div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-    </div>
-
-    <!-- 
-        ========================================================================
-        --- SIDEBAR: COMPLAINT ENTRY ENGINE (Opens from Left) ---
-        محرك تحرير مذكرات البلاغات الرقمية وتوجيهها للفروع - يفتح من اليسار
-        ========================================================================
-    -->
-    <div id="sidebar-complaint-arc-hub" class="sidebar-complaint-master">
-        <h2 style="color:var(--gold-master); font-size:3rem; margin-bottom:60px;"><i class="fas fa-file-signature"></i> تحرير مذكرة بلاغ VIP</h2>
-        
-        <label>فرع البلاغ المعني بالواقعة</label>
-        <select id="f-branch-master-sel"></select>
-
-        <label>تاريخ الواقعة (يمكن اختيار تاريخ قديم)</label>
-        <input type="date" id="f-date-master">
-
-        <label>رقم الأوردر (Order Identifier)</label>
-        <input id="f-order-id-input" placeholder="#00000000">
-        
-        <label>اسم العميل الكامل</label>
-        <input id="f-customer-name-input" placeholder="اسم العميل">
-        
-        <label>تصنيف وطبيعة الشكوى الفني</label>
-        <select id="f-complaint-type-sel">
-            <option>أوردر ناقص فعلاً</option>
-            <option>تأخير حاد في التوصيل</option>
-            <option>جودة طعام سيئة</option>
-            <option>سوء معاملة من الطيار</option>
-            <option>أخرى</option>
-        </select>
-        
-        <label>اسم كابتن التوصيل</label>
-        <input id="f-driver-name-input" placeholder="اسم الطيار">
-        
-        <label>نص الشكوى وتفاصيل الواقعة بدقة</label>
-        <textarea id="f-complaint-msg-input" rows="8" placeholder="اكتب تفاصيل الشكوى بدقة هنا لتحليلها..."></textarea>
-        
-        <button class="btn-vip-execute-master" id="submit-complaint-btn" onclick="runComplaintTicketSequence()">توجيه البلاغ فوراً <i class="fab fa-whatsapp"></i></button>
-    </div>
-
-    <!-- 
-        ========================================================================
-        --- JAVASCRIPT MASTER CORE ENGINE V45.0 ---
-        العقل المدبر للمنظومة بالكامل - يحتوي على منطق برمجي كثيف ومحرك تحليل
-        ========================================================================
-    -->
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
-    <script>
-        /* 
-           ========================================================================
-           --- INTERNAL CORE LOGIC: VIP INFINITE INTELLIGENCE --- 
-           هذا الجزء يضم المنطق البرمجي المفصل لضمان أعلى أداء
-           ========================================================================
-        */
-        const firebaseConfig = {
-            apiKey: "AIzaSyBSwsheoAEJm3pLMI8lhVvzFnLS-a4FrVA",
-            authDomain: "break2-5de32.firebaseapp.com",
-            databaseURL: "https://break2-5de32-default-rtdb.firebaseio.com",
-            projectId: "break2-5de32",
-            storageBucket: "break2-5de32.firebasestorage.app",
-            messagingSenderId: "864134684796",
-            appId: "1:864134684796:web:078af20f713c95a08be9f9"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const dbHub = firebase.database();
-
-        // متغيرات الحالة العالمية (Global System State)
-        let currentUserSession = null;
-        let complaintsCache = {};
-        let systemSettingsCache = {};
-        let branchListCache = [];
-        let analyticsChartInstance = null;
-        let analyticsTypeChartInstance = null;
-
-        /**
-         * محرك التحقق الأمني (Security Auth Module)
-         * يقوم بالتحقق من الهوية الرقمية وصلاحيات الولوج
-         */
-        async function runSecurityAuthSequence() {
-            const uid = document.getElementById('auth-uid-master').value.trim();
-            const pwd = document.getElementById('auth-pwd-master').value.trim();
-
-            if(!uid || !pwd) {
-                renderSystemToast("يرجى إدخال كافة بيانات الولوج الرقمية!", "danger");
-                return;
-            }
-
-            // نظام الولوج الفائق للمطورين والملاك
-            if(uid === 'super' && pwd === 'vip2026') {
-                grantCoreAccess({
-                    id: 'super', 
-                    name: 'Super Administrator', 
-                    title: 'ROOT-COMMAND', 
-                    branch: 'ALL', 
-                    role: 'SUPER'
-                });
-                return;
-            }
-
-            const snap = await dbHub.ref('users/' + uid).get();
-            if(snap.exists() && snap.val().pass === pwd) {
-                grantCoreAccess({id: uid, ...snap.val()});
-            } else {
-                Swal.fire('اختراق أمني أو خطأ', 'بيانات الهوية الرقمية المدخلة غير موجودة في سجلاتنا.', 'error');
-            }
-        }
-
-        function grantCoreAccess(data) {
-            localStorage.setItem('vip_v43_secure_token', JSON.stringify(data));
-            location.reload();
-        }
-
-        function runSystemLogoutSequence() {
-            localStorage.removeItem('vip_v43_secure_token');
-            location.reload();
-        }
-
-        /**
-         * تهيئة محرك المنظومة عند التشغيل
-         */
-        window.onload = () => {
-            const sess = localStorage.getItem('vip_v43_secure_token');
-            if(sess) {
-                currentUserSession = JSON.parse(sess);
-                document.getElementById('auth-portal-mask').classList.add('hidden');
-                document.getElementById('main-system-viewport').classList.remove('hidden');
-                document.getElementById('ui-user-fullname').innerText = currentUserSession.name;
-                document.getElementById('ui-user-rank-label').innerText = currentUserSession.title;
-                document.getElementById('ui-avatar-orb').innerText = currentUserSession.name.charAt(0);
-                
-                // تهيئة التواريخ الافتراضية
-                const todayStr = new Date().toISOString().split('T')[0];
-                document.getElementById('daily-master-date-picker').value = todayStr;
-                document.getElementById('archive-date-from').value = todayStr;
-                document.getElementById('archive-date-to').value = todayStr;
-                document.getElementById('reports-date-from').value = todayStr;
-                document.getElementById('reports-date-to').value = todayStr;
-                document.getElementById('f-date-master').value = todayStr;
-
-                initCoreDataListeners();
-            }
-        };
-
-        /**
-         * محركات البث المباشر للبيانات (Real-time Stream Engine)
-         */
-        function initCoreDataListeners() {
-            // مستمع الإعدادات (فروع، رتب، هواتف)
-            dbHub.ref('settings').on('value', snap => {
-                systemSettingsCache = snap.val() || {};
-                branchListCache = systemSettingsCache.branches ? Object.values(systemSettingsCache.branches) : [];
-
-                // إضافة الرتب الافتراضية والكول سنتر إذا لم تكن موجودة
-                if(!systemSettingsCache.custom_ranks) systemSettingsCache.custom_ranks = {};
-                const defaultRanks = ['ديسبتشر', 'مدير فرع', 'مدير المنطقة', 'كول سنتر'];
-                defaultRanks.forEach(rank => {
-                    if(!systemSettingsCache.custom_ranks[rank]) {
-                        dbHub.ref('settings/custom_ranks/' + rank).set(true);
-                        systemSettingsCache.custom_ranks[rank] = true;
-                    }
-                });
-                // إضافة صلاحيات الكول سنتر
-                if(!systemSettingsCache.permissions) systemSettingsCache.permissions = {};
-                if(!systemSettingsCache.permissions['كول سنتر']) {
-                    const ccPerms = {
-                        view_all: true,
-                        create_ticket: true,
-                        reply_ticket: false,
-                        daily_edit: false,
-                        admin_access: false
-                    };
-                    dbHub.ref('settings/permissions/كول سنتر').set(ccPerms);
-                    systemSettingsCache.permissions['كول سنتر'] = ccPerms;
-                }
-
-                syncUiDropdownSelections();
-                renderAdminBranchScrollBox();
-                renderAdminUsersScrollBox();
-                renderBranchWhatsappList();
-                loadDailySnapshotData();
-                runPermissionShieldCheck();
-            });
-
-            // مستمع البلاغات (الشكاوى والعمليات)
-            dbHub.ref('operations').on('value', snap => {
-                complaintsCache = snap.val() || {};
-                renderLiveBroadcastMatrix();
-                runArchiveRefreshSequence();
-            });
-        }
-
-        /**
-         * محرك اليومية الديناميكي (DYNAMIC DAILY SNAPSHOT)
-         */
-        async function loadDailySnapshotData() {
-            const dateStr = document.getElementById('daily-master-date-picker').value;
-            const gridBox = document.getElementById('render-daily-grid-hub');
-            gridBox.innerHTML = `<h2 style="grid-column: 1/-1; text-align: center; opacity: 0.3; padding: 120px;">جاري فتح مصفوفة سجلات يوم ${dateStr}...</h2>`;
-
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
-            const canEdit = p.daily_edit || currentUserSession.role === 'SUPER';
-            const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
-
-            const dSnap = await dbHub.ref(`daily_stats/${dateStr}`).get();
-            const dailyData = dSnap.val() || {};
-            
-            gridBox.innerHTML = "";
-            branchListCache.forEach(branch => {
-                if(!canSeeAll && branch !== currentUserSession.branch) return;
-
-                gridBox.innerHTML += `
-                    <div class="massive-glass-card branch-data-card">
-                        <h4 style="font-size: 2.5rem; margin: 0;">${branch}</h4>
-                        <input type="number" class="massive-daily-input" 
-                               value="${dailyData[branch] || 0}" 
-                               ${canEdit ? '' : 'disabled'} 
-                               onchange="commitDailyOrderValue('${dateStr}', '${branch}', this.value)">
-                        <div style="font-size: 1.2rem; color: var(--text-muted-core); margin-top: 30px;">إجمالي أوردرات يوم ${dateStr}</div>
-                    </div>`;
-            });
-        }
-
-        async function commitDailyOrderValue(date, br, val) {
-            if(val < 0) { renderSystemToast("لا تقبل القيم السالبة في المنظومة!", "danger"); return; }
-            await dbHub.ref(`daily_stats/${date}/${br}`).set(val);
-            renderSystemToast(`تم حفظ أوردرات ${br} ليوم ${date}`, "success");
-        }
-
-        /**
-         * محرك تحرير وتوجيه البلاغات (Complaint Entry Core)
-         */
-        async function runComplaintTicketSequence() {
-            const br = document.getElementById('f-branch-master-sel').value;
-            const ord = document.getElementById('f-order-id-input').value.trim();
-            const cust = document.getElementById('f-customer-name-input').value.trim();
-            const type = document.getElementById('f-complaint-type-sel').value;
-            const drv = document.getElementById('f-driver-name-input').value.trim();
-            const msg = document.getElementById('f-complaint-msg-input').value.trim();
-
-            if(!ord || !cust || !msg) {
-                Swal.fire('خطأ في البيانات', 'يرجى استكمال كافة الحقول الأساسية قبل التوجيه.', 'warning');
-                return;
-            }
-
-            const timeNow = new Date().toLocaleTimeString('ar-EG');
-            const dateNow = new Date().toISOString().split('T')[0];
-            const selectedDate = document.getElementById('f-date-master').value;
-
-            const ticketData = {
-                branch: br,
-                order: ord,
-                customer: cust,
-                type: type,
-                msg: msg,
-                driver: drv,
-                stage: 'waiting_review',
-                status: 'active',
-                timestamp: new Date().toLocaleString('ar-EG'),
-                timeOnly: timeNow,
-                date: selectedDate,
-                author: currentUserSession.name,
-                logs: [{
-                    time: timeNow,
-                    user: currentUserSession.name,
-                    action: "تحرير بلاغ VIP وتوجيه للمراجعة."
-                }]
-            };
-
-            await dbHub.ref('operations').push(ticketData);
-            triggerBranchBroadcast(br, ord, cust, type, msg, timeNow);
-            closeSidebarControl();
-            renderSystemToast("تم توجيه البلاغ للفرع بنجاح!", "success");
-            
-            ['f-order-id-input','f-customer-name-input','f-complaint-msg-input','f-driver-name-input'].forEach(id => document.getElementById(id).value = '');
-        }
-
-        /**
-         * محرك بث إشعارات الواتساب (Multi-Channel Broadcast)
-         */
-        async function triggerBranchBroadcast(br, ord, cust, type, msg, time) {
-            const pMap = systemSettingsCache.phones ? (systemSettingsCache.phones[br] || {}) : {};
-            const pList = Object.values(pMap);
-            if(pList.length === 0) return;
-
-            const text = `🚨 *بلاغ VIP جديد* 🚨\n\n📍 الفرع: ${br}\n⏰ الوقت: ${time}\n🔢 الطلب: ${ord}\n👤 العميل: ${cust}\n🏷️ النوع: ${type}\n📝 الشكوى: ${msg}\n👷 المتلقي بالفرع: ${currentUserSession.name}`;
-            
-            pList.forEach(ph => {
-                fetch(`https://api.ultramsg.com/instance157671/messages/chat`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: new URLSearchParams({'token': 'cpx85mx613v868fe', 'to': ph, 'body': text})
-                });
-            });
-        }
-
-        /**
-         * محرك عرض البث المباشر (Live Matrix Renderer)
-         */
-        function renderLiveBroadcastMatrix() {
-            const box = document.getElementById('render-live-feed-matrix');
-            box.innerHTML = "";
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
-            const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
-
-            Object.keys(complaintsCache).reverse().forEach(id => {
-                const op = complaintsCache[id];
-                if(op.status === 'done') return; 
-                if(!canSeeAll && op.branch !== currentUserSession.branch) return;
-
-                box.innerHTML += generateTicketMarkup(id, op, true, p);
-            });
-        }
-
-        /**
-         * محرك عرض الأرشيف التاريخي (History Hub Renderer)
-         */
-        function runArchiveRefreshSequence() {
-            const box = document.getElementById('render-archive-grid-hub');
-            if(!box) return;
-            box.innerHTML = "";
-            const from = document.getElementById('archive-date-from').value;
-            const to = document.getElementById('archive-date-to').value;
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
-            const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
-
-            Object.keys(complaintsCache).reverse().forEach(id => {
-                const op = complaintsCache[id];
-                if(op.status !== 'done') return;
-                if(!canSeeAll && op.branch !== currentUserSession.branch) return;
-                if(op.date < from || op.date > to) return;
-
-                box.innerHTML += generateTicketMarkup(id, op, false, p);
-            });
-        }
-
-        /**
-         * بناء هيكل البطاقة البصري (Visual Card Builder)
-         */
-        function generateTicketMarkup(id, op, isInteractive, p) {
-            let btns = "";
-            if(isInteractive) {
-                if(op.stage === 'waiting_review' && (p.reply_ticket || currentUserSession.role === 'SUPER')) {
-                    btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="openBranchReplyModalHub('${id}')">الرد والمراجعة الرسمية <i class="fas fa-reply-all"></i></button>`;
-                } else if(op.stage === 'replied' && currentUserSession.role === 'SUPER') {
-                    btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
-                            <button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff;" onclick="sendToBranchManagerFromCallCenter('${id}')">إرسال لمدير الفرع (ناقص فعلاً) <i class="fas fa-arrow-right"></i></button>`;
-                } else if(op.stage === 'sent_to_branch_manager' && currentUserSession.title === 'مدير فرع') {
-                    btns = `<button class="btn-vip-execute-master" onclick="openBranchManagerReplyModalHub('${id}')">الرد كمدير فرع <i class="fas fa-reply-all"></i></button>`;
-                } else if(op.stage === 'sent_back_to_call_center' && currentUserSession.role === 'SUPER') {
-                    btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
-                            <button class="btn-vip-execute-master" onclick="sendToRegionalManager('${id}')">إرسال لمدير المنطقة <i class="fas fa-arrow-up"></i></button>`;
-                } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.title === 'مدير المنطقة') {
-                    btns = `<button class="btn-vip-execute-master" onclick="openRegionalManagerReplyModalHub('${id}')">الرد كمدير منطقة <i class="fas fa-reply-all"></i></button>`;
-                } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.role === 'SUPER') {
-                    btns = `<button class="btn-vip-execute-master" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً <i class="fas fa-check-circle"></i></button>`;
-                }
-            }
-            if(currentUserSession.role === 'SUPER') {
-                btns += `<button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff; margin-top:10px;" onclick="deleteTicketRecord('${id}')">حذف البلاغ نهائياً <i class="fas fa-trash"></i></button>`;
-            }
-
-            const logs = op.logs ? op.logs.map(l => `
-                <div class="audit-row-item">
-                    <b>${l.user}:</b> ${l.action}
-                    <span class="timestamp-label">${l.time}</span>
-                </div>`).join('') : '';
-
-            const badge = (op.branch_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">تأكيد نقص فعلي ❌</span>' :
-                (op.branch_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">الأوردر كامل وسليم ✅</span>' : '')) +
-                (op.branch_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير الفرع: نقص فعلي ❌</span>' :
-                (op.branch_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير الفرع: كامل ✅</span>' : '')) +
-                (op.regional_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير المنطقة: نقص فعلي ❌</span>' :
-                (op.regional_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير المنطقة: كامل ✅</span>' : ''));
-
-            return `
-                <div class="massive-glass-card ticket-visual-unit">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
-                        <b style="color:var(--gold-master); font-size:2rem;">📍 فرع : ${op.branch}</b>
-                        <span style="opacity:0.7; font-weight:900;">${op.timestamp}</span>
+                <!-- 
+                    ========================================================================
+                    --- MODULE: ARCHIVE HUB (أرشيف السحابة والبحث التاريخي) ---
+                    ========================================================================
+                -->
+                <div id="module-view-archive" class="hidden">
+                    <div class="massive-glass-card" style="padding:60px; display:flex; gap:40px; margin-bottom:60px; align-items:flex-end;">
+                        <div style="flex:1;"><label>مراجعة من تاريخ:</label><input type="date" id="archive-date-from" onchange="runArchiveRefreshSequence()"></div>
+                        <div style="flex:1;"><label>مراجعة إلى تاريخ:</label><input type="date" id="archive-date-to" onchange="runArchiveRefreshSequence()"></div>
+                        <button class="btn-vip-execute-master" style="width:300px;" onclick="runArchiveRefreshSequence()">تحديث الأرشيف <i class="fas fa-rotate"></i></button>
                     </div>
-                    ${badge}
-                    <div style="font-size:3rem; font-weight:950; margin-bottom:25px;">📦 أوردر: #${op.order}</div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; margin-bottom:25px; color:var(--accent-navy); font-weight:950; font-size:1.4rem;">
-                        <span>👤 العميل: ${op.customer}</span>
-                        <span>🏷️ النوع: ${op.type}</span>
+                    <div id="render-archive-grid-hub" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(700px, 1fr)); gap:50px;"></div>
+                </div>
+
+                <!-- 
+                    ========================================================================
+                    --- MODULE: ANALYTICS COMMAND HUB (تحليل الكفاءة ومعدل الخطأ) ---
+                    ========================================================================
+                -->
+                <div id="module-view-reports" class="hidden">
+                    <div class="massive-glass-card" style="padding:50px; display:flex; gap:40px; margin-bottom:60px; align-items:flex-end;">
+                        <div style="flex:1;"><label>فترة التحليل من:</label><input type="date" id="reports-date-from"></div>
+                        <div style="flex:1;"><label>إلى:</label><input type="date" id="reports-date-to"></div>
+                        <button class="btn-vip-execute-master" style="width:250px;" onclick="executeAdvancedAnalyticsSequence()">بدء التحليل <i class="fas fa-brain"></i></button>
+                        <button class="btn-vip-execute-master" style="width:200px; background:var(--accent-navy); color:white;" onclick="exportReportsToExcel()">Excel <i class="fas fa-file-excel"></i></button>
                     </div>
-                    <div style="color:var(--success-glow); font-weight:950; margin-bottom:25px; font-size:1.4rem;">👨‍✈️ الطيار: ${op.driver || '---'}</div>
-                    <div style="color:var(--accent-navy); font-weight:950; margin-bottom:25px; font-size:1.2rem;">
-                        👤 المحرر: ${op.author || '---'}<br>
-                        👨‍💼 الديسبتشر: ${op.dispatcher_name || '---'}<br>
-                        👨‍💼 مدير الفرع: ${op.branch_manager_name || '---'}<br>
-                        👨‍💼 مدير المنطقة: ${op.regional_manager_name || '---'}
-                    </div>
-                    <p style="background:rgba(0,0,0,0.65); padding:30px; border-radius:20px; border:2px solid rgba(255,255,255,0.1); font-size:1.4rem; line-height:1.8;">📝 ${op.msg}</p>
-                    <div class="audit-logs-viewport">${logs}</div>
-                    <div style="margin-top:40px;">${btns}</div>
-                </div>`;
-        }
+                    
+                    <!-- كروت الإحصائيات الذكية -->
+                    <div id="render-analytics-stat-row" class="stat-cards-grid"></div>
+                    
+                    <!-- منطقة الرسوم البيانية المزدوجة -->
+                    <div class="analytics-dual-layout">
+                        <!-- الرسم البياني الرئيسي (معدل الخطأ) -->
+                        <div class="massive-glass-card chart-viewport-massive">
+                            <h3 style="color:var(--gold-master); font-size:2.2rem; margin-bottom:30px;">📊 معدل الخطأ لكل 100 أوردر</h3>
+                            <p style="color:var(--text-muted-core); margin-bottom:30px; font-size:1.1rem;">مقارنة دقيقة بين الشكاوى وإجمالي الأوردرات.</p>
+                            <canvas id="master-reports-canvas" style="max-height: 500px;"></canvas>
+                        </div>
 
-        /**
-         * محرك التحليلات الفائقة المطور (ULTRA ANALYTICS ENGINE)
-         * يقوم بحساب معدل الخطأ وإظهار الأرقام الفردية لكل فرع + تحليل أنواع الشكاوى
-         */
-        async function executeAdvancedAnalyticsSequence() {
-            const from = document.getElementById('reports-date-from').value;
-            const to = document.getElementById('reports-date-to').value;
-            const ops = Object.values(complaintsCache).filter(o => o.date >= from && o.date <= to);
-            
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
-            const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
-
-            // تحديث بطاقات الإحصاء العلوية
-            const resolved = ops.filter(o => o.status === 'done').length;
-            document.getElementById('render-analytics-stat-row').innerHTML = `
-                <div class="analytics-pill-card" style="border-top: 12px solid var(--gold-master)"><h2>${ops.length}</h2><p>إجمالي البلاغات</p></div>
-                <div class="analytics-pill-card" style="border-top: 12px solid var(--success-glow)"><h2>${resolved}</h2><p>بلاغات مغلقة</p></div>
-                <div class="analytics-pill-card" style="border-top: 12px solid var(--danger-pulse)"><h2>${ops.length - resolved}</h2><p>بلاغات قيد العمل</p></div>
-                <div class="analytics-pill-card" style="border-top: 12px solid var(--accent-navy)"><h2>${ops.length ? Math.round((resolved/ops.length)*100) : 0}%</h2><p>نسبة الإنجاز</p></div>
-            `;
-
-            // 1. Chart 1: Error Rate Bar Chart
-            const dSnap = await dbHub.ref('daily_stats').get();
-            const allDays = dSnap.val() || {};
-            const labels = [];
-            const complaintsCounts = [];
-            const ordersCounts = [];
-            const ratios = [];
-
-            branchListCache.forEach(br => {
-                if(!canSeeAll && br !== currentUserSession.branch) return;
-                labels.push(br);
-                const brComplaints = ops.filter(o => o.branch === br).length;
-                let brOrders = 0;
-                Object.keys(allDays).forEach(day => {
-                    if(day >= from && day <= to && allDays[day][br]) brOrders += parseInt(allDays[day][br]);
-                });
-                complaintsCounts.push(brComplaints);
-                ordersCounts.push(brOrders);
-                ratios.push(brOrders > 0 ? ((brComplaints / brOrders) * 100).toFixed(2) : 0);
-            });
-
-            if(analyticsChartInstance) analyticsChartInstance.destroy();
-            analyticsChartInstance = new Chart(document.getElementById('master-reports-canvas'), {
-                type: 'bar',
-                plugins: [ChartDataLabels],
-                data: { 
-                    labels: labels, 
-                    datasets: [{ 
-                        label: 'معدل الخطأ %', 
-                        data: ratios, 
-                        backgroundColor: '#f59e0b', 
-                        borderRadius: 15,
-                        customComplaints: complaintsCounts,
-                        customOrders: ordersCounts
-                    }] 
-                },
-                options: { 
-                    scales: { 
-                        y: { beginAtZero: true, ticks: { color: '#fff' } }, 
-                        x: { ticks: { color: '#fff' } } 
-                    },
-                    plugins: { 
-                        legend: { labels: { color: '#fff', font: {size: 14} } },
-                        datalabels: { 
-                            anchor: 'end', align: 'top', color: '#fff', font: { weight: 'bold', size: 12 },
-                            formatter: (value, ctx) => `ش: ${ctx.dataset.customComplaints[ctx.dataIndex]} | أ: ${ctx.dataset.customOrders[ctx.dataIndex]}\n(${value}%)`,
-                            textAlign: 'center'
-                        }
-                    }
-                }
-            });
-
-            // 2. Chart 2: Type Analysis (Pie/Doughnut)
-            const typeCounts = {};
-            let filteredOpsForType = canSeeAll ? ops : ops.filter(o => o.branch === currentUserSession.branch);
-            
-            filteredOpsForType.forEach(o => { 
-                const t = o.type || 'غير محدد'; 
-                typeCounts[t] = (typeCounts[t] || 0) + 1; 
-            });
-
-            const typeLabels = Object.keys(typeCounts);
-            const typeValues = Object.values(typeCounts);
-            const totalComplaints = typeValues.reduce((a, b) => a + b, 0);
-            const pieColors = ['#f59e0b', '#ef4444', '#10b981', '#1d4ed8', '#8b5cf6', '#ec4899', '#6366f1'];
-
-            if(analyticsTypeChartInstance) analyticsTypeChartInstance.destroy();
-            analyticsTypeChartInstance = new Chart(document.getElementById('master-types-canvas'), {
-                type: 'doughnut',
-                plugins: [ChartDataLabels],
-                data: {
-                    labels: typeLabels,
-                    datasets: [{ 
-                        data: typeValues, 
-                        backgroundColor: pieColors, 
-                        borderColor: '#000', 
-                        borderWidth: 2, 
-                        hoverOffset: 10 
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            position: 'right', 
-                            labels: { color: '#fff', font: { size: 12 }, padding: 15 } 
-                        },
-                        datalabels: {
-                            color: '#000', font: { weight: 'bold', size: 12 },
-                            formatter: (value) => ((value / totalComplaints) * 100).toFixed(1) + "%",
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: 5, padding: 5
-                        }
-                    }
-                }
-            });
-        }
-
-        /**
-         * تصدير البيانات لإكسل (Excel Exporter)
-         */
-        function exportReportsToExcel() {
-            const from = document.getElementById('reports-date-from').value;
-            const to = document.getElementById('reports-date-to').value;
-            const ops = Object.values(complaintsCache).filter(o => o.date >= from && o.date <= to);
-            
-            const list = ops.map(o => ({
-                'تاريخ البلاغ': o.date,
-                'وقت البلاغ': o.timeOnly,
-                'الفرع': o.branch,
-                'رقم الأوردر': o.order,
-                'اسم العميل': o.customer,
-                'نوع الشكوى': o.type,
-                'الحالة': o.status === 'done' ? 'مغلق' : 'نشط',
-                'النتيجة': o.branch_verdict || '---',
-                'المحرر': o.author
-            }));
-
-            const ws = XLSX.utils.json_to_sheet(list);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "VIP_Report");
-            XLSX.writeFile(wb, `VIP_Analytics_${from}_to_${to}.xlsx`);
-        }
-
-        /**
-         * رد الفرع الرسمي (Official Reply Module)
-         */
-        async function openBranchReplyModalHub(id) {
-            const { value: res } = await Swal.fire({
-                title: 'الرد والمراجعة الرسمية للفرع',
-                html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
-                       <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
-                preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
-            });
-
-            if(res) {
-                const op = complaintsCache[id];
-                const action = res[0] === 'ناقص' ? `الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]} - تم أرشفة البلاغ تلقائياً.` : `رد الفرع: [الطلب سليم] - ${res[1]}`;
-                const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
-                const newStage = 'replied';
-                const updateData = {
-                    stage: newStage,
-                    branch_verdict: res[0],
-                    dispatcher_name: currentUserSession.name,
-                    logs: [...(op.logs || []), log]
-                };
-                if(res[0] === 'ناقص') {
-                    updateData.status = 'done';
-                }
-
-                await dbHub.ref('operations/'+id).update(updateData);
-                renderSystemToast(res[0] === 'ناقص' ? "تم أرشفة البلاغ تلقائياً بسبب النقص الفعلي!" : "تم تثبيت رد الفرع بنجاح!", "success");
-            }
-        }
-
-        async function finalizeTicketAndArchive(id) {
-            const op = complaintsCache[id];
-            const log = {
-                time: new Date().toLocaleTimeString('ar-EG'),
-                user: currentUserSession.name,
-                action: "إغلاق البلاغ نهائياً للأرشيف السحابي."
-            };
-            await dbHub.ref('operations/'+id).update({
-                status: 'done',
-                logs: [...(op.logs || []), log]
-            });
-            renderSystemToast("تم أرشفة البلاغ بنجاح.", "success");
-        }
-
-        async function sendToBranchManagerFromCallCenter(id) {
-            const op = complaintsCache[id];
-            const log = {
-                time: new Date().toLocaleTimeString('ar-EG'),
-                user: currentUserSession.name,
-                action: "الكول سنتر يؤكد نقص فعلي بعد مراجعة العميل - إرسال لمدير الفرع."
-            };
-            await dbHub.ref('operations/'+id).update({
-                stage: 'sent_to_branch_manager',
-                logs: [...(op.logs || []), log]
-            });
-            renderSystemToast("تم إرسال البلاغ لمدير الفرع.", "success");
-        }
-
-        async function sendToRegionalManager(id) {
-            const op = complaintsCache[id];
-            const log = {
-                time: new Date().toLocaleTimeString('ar-EG'),
-                user: currentUserSession.name,
-                action: "الكول سنتر يرسل البلاغ لمدير المنطقة للمراجعة النهائية."
-            };
-            await dbHub.ref('operations/'+id).update({
-                stage: 'sent_to_regional_manager',
-                logs: [...(op.logs || []), log]
-            });
-            renderSystemToast("تم إرسال البلاغ لمدير المنطقة.", "success");
-        }
-
-        /**
-         * حذف البلاغ نهائياً (Super Admin Delete Module)
-         */
-        async function deleteTicketRecord(id) {
-            const { value: confirmDelete } = await Swal.fire({
-                title: 'تأكيد الحذف النهائي',
-                text: 'هل أنت متأكد من حذف هذا البلاغ نهائياً؟ لا يمكن التراجع عن هذا الإجراء.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'نعم، احذف',
-                cancelButtonText: 'إلغاء'
-            });
-
-            if (confirmDelete) {
-                await dbHub.ref('operations/' + id).remove();
-                renderSystemToast("تم حذف البلاغ نهائياً.", "success");
-            }
-        }
-
-        /**
-         * رد مدير الفرع (Branch Manager Reply Module)
-         */
-        async function openBranchManagerReplyModalHub(id) {
-            const { value: res } = await Swal.fire({
-                title: 'الرد والمراجعة الرسمية لمدير الفرع',
-                html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
-                       <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
-                preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
-            });
-
-            if(res) {
-                const op = complaintsCache[id];
-                const action = res[0] === 'ناقص' ? `مدير الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير الفرع: [الطلب سليم] - ${res[1]}`;
-                const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
-                const newStage = 'sent_back_to_call_center';
-
-                await dbHub.ref('operations/'+id).update({
-                    stage: newStage,
-                    branch_manager_verdict: res[0],
-                    branch_manager_name: currentUserSession.name,
-                    logs: [...(op.logs || []), log]
-                });
-                renderSystemToast("تم تثبيت رد مدير الفرع بنجاح!", "success");
-            }
-        }
-
-        /**
-         * رد مدير المنطقة (Regional Manager Reply Module)
-         */
-        async function openRegionalManagerReplyModalHub(id) {
-            const { value: res } = await Swal.fire({
-                title: 'الرد والمراجعة الرسمية لمدير المنطقة',
-                html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
-                       <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
-                preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
-            });
-
-            if(res) {
-                const op = complaintsCache[id];
-                const action = res[0] === 'ناقص' ? `مدير المنطقة يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير المنطقة: [الطلب سليم] - ${res[1]}`;
-                const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
-                const newStage = 'sent_to_regional_manager';
-
-                await dbHub.ref('operations/'+id).update({
-                    stage: newStage,
-                    regional_manager_verdict: res[0],
-                    regional_manager_name: currentUserSession.name,
-                    logs: [...(op.logs || []), log]
-                });
-                renderSystemToast("تم تثبيت رد مدير المنطقة بنجاح!", "success");
-            }
-        }
-
-        /**
-         * مزامنة القوائم والخيارات (UI Sync Hub)
-         */
-        function syncUiDropdownSelections() {
-            const html = branchListCache.map(b => `<option>${b}</option>`).join('');
-            document.getElementById('f-branch-master-sel').innerHTML = html;
-            document.getElementById('adm-whatsapp-br-sel').innerHTML = html;
-            document.getElementById('reg-user-branch-sel-core').innerHTML = `<option value="ALL">الإدارة العليا</option>` + html;
-            
-            const ranks = systemSettingsCache.custom_ranks ? Object.keys(systemSettingsCache.custom_ranks) : ['ديسبتشر', 'مدير فرع', 'مدير المنطقة'];
-            const rHtml = ranks.map(r => `<option>${r}</option>`).join('');
-            document.getElementById('adm-rank-matrix-sel').innerHTML = `<option value="">-- اختر رتبة لتعديل مصفوفتها --</option>` + rHtml;
-            document.getElementById('reg-user-rank-sel-core').innerHTML = rHtml;
-        }
-
-        function renderAdminBranchScrollBox() {
-            const box = document.getElementById('adm-branches-scroll-box'); box.innerHTML = "";
-            const brs = systemSettingsCache.branches || {};
-            Object.keys(brs).forEach(k => {
-                box.innerHTML += `
-                    <div class="admin-row-item">
-                        <span><i class="fas fa-building" style="color:var(--gold-master)"></i> ${brs[k]}</span>
-                        <i class="fas fa-trash-alt" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('settings/branches/${k}').remove()"></i>
-                    </div>`;
-            });
-        }
-
-        async function addSystemBranchCore() {
-            const n = document.getElementById('adm-branch-name-input').value.trim();
-            if(n) await dbHub.ref('settings/branches').push(n);
-            document.getElementById('adm-branch-name-input').value = "";
-        }
-
-        function renderBranchWhatsappList() {
-            const br = document.getElementById('adm-whatsapp-br-sel').value;
-            const box = document.getElementById('adm-whatsapp-scroll-box'); box.innerHTML = "";
-            const p = systemSettingsCache.phones ? (systemSettingsCache.phones[br] || {}) : {};
-            Object.keys(p).forEach(k => box.innerHTML += `
-                <div class="admin-row-item">
-                    <span>${p[k]}</span>
-                    <i class="fas fa-trash" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('settings/phones/${br}/${k}').remove()"></i>
-                </div>`);
-        }
-
-        async function bindNewWhatsappToBranch() {
-            const br = document.getElementById('adm-whatsapp-br-sel').value;
-            const ph = document.getElementById('adm-whatsapp-phone-input').value.trim();
-            if(ph) await dbHub.ref(`settings/phones/${br}`).push(ph);
-            document.getElementById('adm-whatsapp-phone-input').value = "";
-        }
-
-        function loadRankPermissionsMatrixHub() {
-            const r = document.getElementById('adm-rank-matrix-sel').value;
-            if(!r) { document.getElementById('adm-permissions-grid-hub').classList.add('hidden'); return; }
-            document.getElementById('adm-permissions-grid-hub').classList.remove('hidden');
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[r] || {}) : {};
-            document.getElementById('perm-view-all').checked = p.view_all || false;
-            document.getElementById('perm-create-ticket').checked = p.create_ticket || false;
-            document.getElementById('perm-reply-ticket').checked = p.reply_ticket || false;
-            document.getElementById('perm-daily-edit').checked = p.daily_edit || false;
-            document.getElementById('perm-admin-access').checked = p.admin_access || false;
-        }
-
-        async function saveRankPermissionsSequence() {
-            const r = document.getElementById('adm-rank-matrix-sel').value;
-            const data = {
-                view_all: document.getElementById('perm-view-all').checked,
-                create_ticket: document.getElementById('perm-create-ticket').checked,
-                reply_ticket: document.getElementById('perm-reply-ticket').checked,
-                daily_edit: document.getElementById('perm-daily-edit').checked,
-                admin_access: document.getElementById('perm-admin-access').checked
-            };
-            await dbHub.ref('settings/permissions/'+r).set(data);
-            renderSystemToast("تم تحديث مصفوفة الصلاحيات.", "success");
-        }
-
-        function renderAdminUsersScrollBox() {
-            const box = document.getElementById('adm-users-scroll-box'); box.innerHTML = "";
-            dbHub.ref('users').once('value', snap => {
-                const u = snap.val() || {};
-                Object.keys(u).forEach(uid => {
-                    const user = u[uid];
-                    box.innerHTML += `
-                        <div class="admin-row-item">
-                            <div>
-                                <b style="color:var(--gold-master)">${user.name}</b> <small>(${user.title})</small>
-                                <div style="font-size: 0.8rem; color: var(--text-muted-core)">ID: ${uid} | الفرع: ${user.branch}</div>
+                        <!-- الرسم البياني الجديد (تحليل أنواع الشكاوى) -->
+                        <div class="massive-glass-card chart-viewport-massive">
+                            <h3 style="color:var(--gold-master); font-size:2.2rem; margin-bottom:30px;">📉 تحليل تصنيف الشكاوى</h3>
+                            <p style="color:var(--text-muted-core); margin-bottom:30px; font-size:1.1rem;">التوزيع النسبي للأسباب.</p>
+                            <div style="height: 400px; display:flex; justify-content:center;">
+                                <canvas id="master-types-canvas"></canvas>
                             </div>
-                            <i class="fas fa-user-minus" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('users/${uid}').remove().then(()=>renderAdminUsersScrollBox())"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 
+                    ========================================================================
+                    --- MODULE: ADMIN CONTROL MATRIX (الإدارة المركزية المطلقة) ---
+                    ========================================================================
+                -->
+                <div id="module-view-admin" class="hidden">
+                    <div class="admin-layout-flex">
+                        
+                        <!-- التحكم بالفروع والاتصالات الرقمية -->
+                        <div class="massive-glass-card" style="padding:80px;">
+                            <h3 style="color:var(--gold-master); font-size:2.4rem; margin-bottom:60px;"><i class="fas fa-store-slash"></i> الفروع والاتصالات</h3>
+                            <div style="display:flex; gap:25px; margin-bottom:40px;">
+                                <input id="adm-branch-name-input" placeholder="اسم الفرع الجديد">
+                                <button class="btn-vip-execute-master" style="width:180px;" onclick="addSystemBranchCore()">إدراج</button>
+                            </div>
+                            <div id="adm-branches-scroll-box" class="scrollable-admin-list" style="margin-bottom:60px;"></div>
+                            
+                            <hr style="border:0; border-top:2px solid var(--border-glow-line); margin:50px 0;">
+                            
+                            <h3 style="color:var(--gold-master); font-size:2rem; margin-bottom:40px;"><i class="fab fa-whatsapp"></i> واتساب الإشعارات</h3>
+                            <select id="adm-whatsapp-br-sel" onchange="renderBranchWhatsappList()"></select>
+                            <div style="display:flex; gap:25px;">
+                                <input id="adm-whatsapp-phone-input" placeholder="مثال: 2010XXXXXXXX">
+                                <button class="btn-vip-execute-master" style="width:180px; background:var(--success-glow); color:#000;" onclick="bindNewWhatsappToBranch()">+ ربط</button>
+                            </div>
+                            <div id="adm-whatsapp-scroll-box" class="scrollable-admin-list" style="margin-top:40px;"></div>
+                        </div>
+
+                        <!-- التحكم بالرتب وصلاحيات الكوادر البشرية -->
+                        <div class="massive-glass-card" style="padding:80px;">
+                            <h3 style="color:var(--gold-master); font-size:2.4rem; margin-bottom:60px;"><i class="fas fa-shield-halved"></i> مصفوفة الرتب والصلاحيات</h3>
+                            <div style="display:flex; gap:25px; margin-bottom:40px;">
+                                <input id="adm-rank-name-input" placeholder="اسم رتبة جديدة">
+                                <button class="btn-vip-execute-master" style="width:180px;" onclick="registerNewRankTitleCore()">إضافة</button>
+                            </div>
+                            <select id="adm-rank-matrix-sel" onchange="loadRankPermissionsMatrixHub()"></select>
+                            <div id="adm-permissions-grid-hub" class="hidden" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; background:rgba(0,0,0,0.6); padding:40px; border-radius:20px; margin-top:35px; border:2px solid var(--border-glow-line);">
+                                <label><input type="checkbox" id="perm-view-all"> رؤية شاملة</label>
+                                <label><input type="checkbox" id="perm-create-ticket"> إنشاء بلاغات</label>
+                                <label><input type="checkbox" id="perm-reply-ticket"> صلاحية الرد</label>
+                                <label><input type="checkbox" id="perm-daily-edit"> تحرير اليومية</label>
+                                <label><input type="checkbox" id="perm-admin-access"> دخول الإدارة</label>
+                                <button class="btn-vip-execute-master" style="grid-column: span 2; margin-top:30px;" onclick="saveRankPermissionsSequence()">تثبيت الصلاحيات</button>
+                            </div>
+
+                            <hr style="border:0; border-top:2px solid var(--border-glow-line); margin:60px 0;">
+                            
+                            <h3 style="color:var(--gold-master); font-size:2rem; margin-bottom:50px;">👤 تسجيل عضو VIP</h3>
+                            <input id="reg-user-id-core" placeholder="كود ID الدخول">
+                            <input id="reg-user-fullname-core" placeholder="الاسم الرباعي للموظف">
+                            <select id="reg-user-rank-sel-core"></select>
+                            <select id="reg-user-branch-sel-core"></select>
+                            <input id="reg-user-pass-core" type="password" placeholder="كلمة المرور المشفرة">
+                            <button class="btn-vip-execute-master" onclick="registerNewUserToSystemSequence()">إدراج وتفعيل العضوية</button>
+                            <div id="adm-users-scroll-box" class="scrollable-admin-list" style="margin-top:50px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 
+            ========================================================================
+            --- SIDEBAR: COMPLAINT ENTRY ENGINE (Opens from Left) ---
+            محرك تحرير مذكرات البلاغات الرقمية وتوجيهها للفروع - يفتح من اليسار
+            ========================================================================
+        -->
+        <div id="sidebar-complaint-arc-hub" class="sidebar-complaint-master">
+            <h2 style="color:var(--gold-master); font-size:3rem; margin-bottom:60px;"><i class="fas fa-file-signature"></i> تحرير مذكرة بلاغ VIP</h2>
+            
+            <label>فرع البلاغ المعني بالواقعة</label>
+            <select id="f-branch-master-sel"></select>
+
+            <label>تاريخ الواقعة (يمكن اختيار تاريخ قديم)</label>
+            <input type="date" id="f-date-master">
+
+            <label>رقم الأوردر (Order Identifier)</label>
+            <input id="f-order-id-input" placeholder="#00000000">
+            
+            <label>اسم العميل الكامل</label>
+            <input id="f-customer-name-input" placeholder="اسم العميل">
+            
+            <label>تصنيف وطبيعة الشكوى الفني</label>
+            <select id="f-complaint-type-sel">
+                <option>أوردر ناقص فعلاً</option>
+                <option>تأخير حاد في التوصيل</option>
+                <option>جودة طعام سيئة</option>
+                <option>سوء معاملة من الطيار</option>
+                <option>أخرى</option>
+            </select>
+            
+            <label>اسم كابتن التوصيل</label>
+            <input id="f-driver-name-input" placeholder="اسم الطيار">
+            
+            <label>نص الشكوى وتفاصيل الواقعة بدقة</label>
+            <textarea id="f-complaint-msg-input" rows="8" placeholder="اكتب تفاصيل الشكوى بدقة هنا لتحليلها..."></textarea>
+            
+            <button class="btn-vip-execute-master" id="submit-complaint-btn" onclick="runComplaintTicketSequence()">توجيه البلاغ فوراً <i class="fab fa-whatsapp"></i></button>
+        </div>
+
+        <!-- 
+            ========================================================================
+            --- JAVASCRIPT MASTER CORE ENGINE V45.0 ---
+            العقل المدبر للمنظومة بالكامل - يحتوي على منطق برمجي كثيف ومحرك تحليل
+            ========================================================================
+        -->
+        <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
+        <script>
+            /* 
+            ========================================================================
+            --- INTERNAL CORE LOGIC: VIP INFINITE INTELLIGENCE --- 
+            هذا الجزء يضم المنطق البرمجي المفصل لضمان أعلى أداء
+            ========================================================================
+            */
+            const firebaseConfig = {
+                apiKey: "AIzaSyBSwsheoAEJm3pLMI8lhVvzFnLS-a4FrVA",
+                authDomain: "break2-5de32.firebaseapp.com",
+                databaseURL: "https://break2-5de32-default-rtdb.firebaseio.com",
+                projectId: "break2-5de32",
+                storageBucket: "break2-5de32.firebasestorage.app",
+                messagingSenderId: "864134684796",
+                appId: "1:864134684796:web:078af20f713c95a08be9f9"
+            };
+            firebase.initializeApp(firebaseConfig);
+            const dbHub = firebase.database();
+
+            // متغيرات الحالة العالمية (Global System State)
+            let currentUserSession = null;
+            let complaintsCache = {};
+            let systemSettingsCache = {};
+            let branchListCache = [];
+            let analyticsChartInstance = null;
+            let analyticsTypeChartInstance = null;
+
+            /**
+            * محرك التحقق الأمني (Security Auth Module)
+            * يقوم بالتحقق من الهوية الرقمية وصلاحيات الولوج
+            */
+            async function runSecurityAuthSequence() {
+                const uid = document.getElementById('auth-uid-master').value.trim();
+                const pwd = document.getElementById('auth-pwd-master').value.trim();
+
+                if(!uid || !pwd) {
+                    renderSystemToast("يرجى إدخال كافة بيانات الولوج الرقمية!", "danger");
+                    return;
+                }
+
+                // نظام الولوج الفائق للمطورين والملاك
+                if(uid === 'super' && pwd === 'vip2026') {
+                    grantCoreAccess({
+                        id: 'super', 
+                        name: 'Super Administrator', 
+                        title: 'ROOT-COMMAND', 
+                        branch: 'ALL', 
+                        role: 'SUPER'
+                    });
+                    return;
+                }
+
+                const snap = await dbHub.ref('users/' + uid).get();
+                if(snap.exists() && snap.val().pass === pwd) {
+                    grantCoreAccess({id: uid, ...snap.val()});
+                } else {
+                    Swal.fire('اختراق أمني أو خطأ', 'بيانات الهوية الرقمية المدخلة غير موجودة في سجلاتنا.', 'error');
+                }
+            }
+
+            function grantCoreAccess(data) {
+                localStorage.setItem('vip_v43_secure_token', JSON.stringify(data));
+                location.reload();
+            }
+
+            function runSystemLogoutSequence() {
+                localStorage.removeItem('vip_v43_secure_token');
+                location.reload();
+            }
+
+            /**
+            * تهيئة محرك المنظومة عند التشغيل
+            */
+            window.onload = () => {
+                const sess = localStorage.getItem('vip_v43_secure_token');
+                if(sess) {
+                    currentUserSession = JSON.parse(sess);
+                    document.getElementById('auth-portal-mask').classList.add('hidden');
+                    document.getElementById('main-system-viewport').classList.remove('hidden');
+                    document.getElementById('ui-user-fullname').innerText = currentUserSession.name;
+                    document.getElementById('ui-user-rank-label').innerText = currentUserSession.title;
+                    document.getElementById('ui-avatar-orb').innerText = currentUserSession.name.charAt(0);
+                    
+                    // تهيئة التواريخ الافتراضية
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    document.getElementById('daily-master-date-picker').value = todayStr;
+                    document.getElementById('archive-date-from').value = todayStr;
+                    document.getElementById('archive-date-to').value = todayStr;
+                    document.getElementById('reports-date-from').value = todayStr;
+                    document.getElementById('reports-date-to').value = todayStr;
+                    document.getElementById('f-date-master').value = todayStr;
+
+                    initCoreDataListeners();
+                }
+            };
+
+            /**
+            * محركات البث المباشر للبيانات (Real-time Stream Engine)
+            */
+            function initCoreDataListeners() {
+                // مستمع الإعدادات (فروع، رتب، هواتف)
+                dbHub.ref('settings').on('value', snap => {
+                    systemSettingsCache = snap.val() || {};
+                    branchListCache = systemSettingsCache.branches ? Object.values(systemSettingsCache.branches) : [];
+
+                    // إضافة الرتب الافتراضية والكول سنتر إذا لم تكن موجودة
+                    if(!systemSettingsCache.custom_ranks) systemSettingsCache.custom_ranks = {};
+                    const defaultRanks = ['ديسبتشر', 'مدير فرع', 'مدير المنطقة', 'كول سنتر'];
+                    defaultRanks.forEach(rank => {
+                        if(!systemSettingsCache.custom_ranks[rank]) {
+                            dbHub.ref('settings/custom_ranks/' + rank).set(true);
+                            systemSettingsCache.custom_ranks[rank] = true;
+                        }
+                    });
+                    // إضافة صلاحيات الكول سنتر
+                    if(!systemSettingsCache.permissions) systemSettingsCache.permissions = {};
+                    if(!systemSettingsCache.permissions['كول سنتر']) {
+                        const ccPerms = {
+                            view_all: true,
+                            create_ticket: true,
+                            reply_ticket: false,
+                            daily_edit: false,
+                            admin_access: false
+                        };
+                        dbHub.ref('settings/permissions/كول سنتر').set(ccPerms);
+                        systemSettingsCache.permissions['كول سنتر'] = ccPerms;
+                    }
+
+                    syncUiDropdownSelections();
+                    renderAdminBranchScrollBox();
+                    renderAdminUsersScrollBox();
+                    renderBranchWhatsappList();
+                    loadDailySnapshotData();
+                    runPermissionShieldCheck();
+                });
+
+                // مستمع البلاغات (الشكاوى والعمليات)
+                dbHub.ref('operations').on('value', snap => {
+                    complaintsCache = snap.val() || {};
+                    renderLiveBroadcastMatrix();
+                    runArchiveRefreshSequence();
+                });
+            }
+
+            /**
+            * محرك اليومية الديناميكي (DYNAMIC DAILY SNAPSHOT)
+            */
+            async function loadDailySnapshotData() {
+                const dateStr = document.getElementById('daily-master-date-picker').value;
+                const gridBox = document.getElementById('render-daily-grid-hub');
+                gridBox.innerHTML = `<h2 style="grid-column: 1/-1; text-align: center; opacity: 0.3; padding: 120px;">جاري فتح مصفوفة سجلات يوم ${dateStr}...</h2>`;
+
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
+                const canEdit = p.daily_edit || currentUserSession.role === 'SUPER';
+                const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
+
+                const dSnap = await dbHub.ref(`daily_stats/${dateStr}`).get();
+                const dailyData = dSnap.val() || {};
+                
+                gridBox.innerHTML = "";
+                branchListCache.forEach(branch => {
+                    if(!canSeeAll && branch !== currentUserSession.branch) return;
+
+                    gridBox.innerHTML += `
+                        <div class="massive-glass-card branch-data-card">
+                            <h4 style="font-size: 2.5rem; margin: 0;">${branch}</h4>
+                            <input type="number" class="massive-daily-input" 
+                                value="${dailyData[branch] || 0}" 
+                                ${canEdit ? '' : 'disabled'} 
+                                onchange="commitDailyOrderValue('${dateStr}', '${branch}', this.value)">
+                            <div style="font-size: 1.2rem; color: var(--text-muted-core); margin-top: 30px;">إجمالي أوردرات يوم ${dateStr}</div>
                         </div>`;
                 });
-            });
-        }
+            }
 
-        async function registerNewUserToSystemSequence() {
-            const id = document.getElementById('reg-user-id-core').value.trim();
-            const data = {
-                name: document.getElementById('reg-user-fullname-core').value,
-                title: document.getElementById('reg-user-rank-sel-core').value,
-                branch: document.getElementById('reg-user-branch-sel-core').value,
-                pass: document.getElementById('reg-user-pass-core').value
-            };
-            if(id && data.name) await dbHub.ref('users/'+id).set(data).then(()=>renderAdminUsersScrollBox());
-            renderSystemToast("تم تفعيل عضوية الموظف.", "success");
-        }
+            async function commitDailyOrderValue(date, br, val) {
+                if(val < 0) { renderSystemToast("لا تقبل القيم السالبة في المنظومة!", "danger"); return; }
+                await dbHub.ref(`daily_stats/${date}/${br}`).set(val);
+                renderSystemToast(`تم حفظ أوردرات ${br} ليوم ${date}`, "success");
+            }
 
-        function registerNewRankTitleCore() {
-            const t = document.getElementById('adm-rank-name-input').value.trim();
-            if(t) dbHub.ref('settings/custom_ranks/'+t).set(true);
-            document.getElementById('adm-rank-name-input').value = "";
-        }
+            /**
+            * محرك تحرير وتوجيه البلاغات (Complaint Entry Core)
+            */
+            async function runComplaintTicketSequence() {
+                const br = document.getElementById('f-branch-master-sel').value;
+                const ord = document.getElementById('f-order-id-input').value.trim();
+                const cust = document.getElementById('f-customer-name-input').value.trim();
+                const type = document.getElementById('f-complaint-type-sel').value;
+                const drv = document.getElementById('f-driver-name-input').value.trim();
+                const msg = document.getElementById('f-complaint-msg-input').value.trim();
 
-        function runPermissionShieldCheck() {
-            const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
-            if(p.admin_access || currentUserSession.role === 'SUPER') document.getElementById('tab-admin').classList.remove('hidden');
-            const canAdd = p.create_ticket || currentUserSession.role === 'SUPER' || currentUserSession.title === 'ديسبتشر';
-            document.getElementById('floating-plus-btn').className = canAdd ? 'floating-action-master' : 'hidden';
-        }
+                if(!ord || !cust || !msg) {
+                    Swal.fire('خطأ في البيانات', 'يرجى استكمال كافة الحقول الأساسية قبل التوجيه.', 'warning');
+                    return;
+                }
 
-        /**
-         * مساعدات الواجهة (UI Logic Helpers)
-         */
-        function openSidebarControl() {
-            const sb = document.getElementById('sidebar-complaint-arc-hub');
-            sb.classList.add('open');
-            document.getElementById('master-dimmer').style.display = 'block';
-        }
+                const timeNow = new Date().toLocaleTimeString('ar-EG');
+                const dateNow = new Date().toISOString().split('T')[0];
+                const selectedDate = document.getElementById('f-date-master').value;
 
-        function closeSidebarControl() {
-            const sb = document.getElementById('sidebar-complaint-arc-hub');
-            sb.classList.remove('open');
-            document.getElementById('master-dimmer').style.display = 'none';
-        }
+                const ticketData = {
+                    branch: br,
+                    order: ord,
+                    customer: cust,
+                    type: type,
+                    msg: msg,
+                    driver: drv,
+                    stage: 'waiting_review',
+                    status: 'active',
+                    timestamp: new Date().toLocaleString('ar-EG'),
+                    timeOnly: timeNow,
+                    date: selectedDate,
+                    author: currentUserSession.name,
+                    logs: [{
+                        time: timeNow,
+                        user: currentUserSession.name,
+                        action: "تحرير بلاغ VIP وتوجيه للمراجعة."
+                    }]
+                };
 
-        function toggleSidebar() {
-            const sb = document.getElementById('system-side-nav');
-            sb.classList.toggle('open');
-        }
+                await dbHub.ref('operations').push(ticketData);
+                triggerBranchBroadcast(br, ord, cust, type, msg, timeNow);
+                closeSidebarControl();
+                renderSystemToast("تم توجيه البلاغ للفرع بنجاح!", "success");
+                
+                ['f-order-id-input','f-customer-name-input','f-complaint-msg-input','f-driver-name-input'].forEach(id => document.getElementById(id).value = '');
+            }
 
-        function switchToAppModule(m) {
-            document.querySelectorAll('.nav-link-vip').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('tab-' + m).classList.add('active');
-            
-            ['live', 'daily', 'archive', 'reports', 'admin'].forEach(id => {
-                document.getElementById('module-view-' + id).classList.add('hidden');
-            });
-            document.getElementById('module-view-' + m).classList.remove('hidden');
+            /**
+            * محرك بث إشعارات الواتساب (Multi-Channel Broadcast)
+            */
+            async function triggerBranchBroadcast(br, ord, cust, type, msg, time) {
+                const pMap = systemSettingsCache.phones ? (systemSettingsCache.phones[br] || {}) : {};
+                const pList = Object.values(pMap);
+                if(pList.length === 0) return;
 
-            if(m === 'reports') executeAdvancedAnalyticsSequence();
-            if(m === 'daily') loadDailySnapshotData();
-        }
+                const text = `🚨 *بلاغ VIP جديد* 🚨\n\n📍 الفرع: ${br}\n⏰ الوقت: ${time}\n🔢 الطلب: ${ord}\n👤 العميل: ${cust}\n🏷️ النوع: ${type}\n📝 الشكوى: ${msg}\n👷 المتلقي بالفرع: ${currentUserSession.name}`;
+                
+                pList.forEach(ph => {
+                    fetch(`https://api.ultramsg.com/instance157671/messages/chat`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: new URLSearchParams({'token': 'cpx85mx613v868fe', 'to': ph, 'body': text})
+                    });
+                });
+            }
 
-        function renderSystemToast(m, type) {
-            const box = document.getElementById('system-toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg-vip';
-            if(type === 'danger') toast.style.background = '#ef4444';
-            toast.innerHTML = `<i class="fas ${type === 'danger' ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${m}`;
-            box.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
-        }
+            /**
+            * محرك عرض البث المباشر (Live Matrix Renderer)
+            */
+            function renderLiveBroadcastMatrix() {
+                const box = document.getElementById('render-live-feed-matrix');
+                box.innerHTML = "";
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
+                const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
 
-    </script>
-</body>
-</html>
+                Object.keys(complaintsCache).reverse().forEach(id => {
+                    const op = complaintsCache[id];
+                    if(op.status === 'done') return; 
+                    if(!canSeeAll && op.branch !== currentUserSession.branch) return;
+
+                    box.innerHTML += generateTicketMarkup(id, op, true, p);
+                });
+            }
+
+            /**
+            * محرك عرض الأرشيف التاريخي (History Hub Renderer)
+            */
+            function runArchiveRefreshSequence() {
+                const box = document.getElementById('render-archive-grid-hub');
+                if(!box) return;
+                box.innerHTML = "";
+                const from = document.getElementById('archive-date-from').value;
+                const to = document.getElementById('archive-date-to').value;
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
+                const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
+
+                Object.keys(complaintsCache).reverse().forEach(id => {
+                    const op = complaintsCache[id];
+                    if(op.status !== 'done') return;
+                    if(!canSeeAll && op.branch !== currentUserSession.branch) return;
+                    if(op.date < from || op.date > to) return;
+
+                    box.innerHTML += generateTicketMarkup(id, op, false, p);
+                });
+            }
+
+            /**
+            * بناء هيكل البطاقة البصري (Visual Card Builder)
+            */
+            function generateTicketMarkup(id, op, isInteractive, p) {
+                let btns = "";
+                if(isInteractive) {
+                    if(op.stage === 'waiting_review' && (p.reply_ticket || currentUserSession.role === 'SUPER')) {
+                        btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="openBranchReplyModalHub('${id}')">الرد والمراجعة الرسمية <i class="fas fa-reply-all"></i></button>`;
+                    } else if(op.stage === 'replied' && currentUserSession.role === 'SUPER') {
+                        btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
+                                <button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff;" onclick="sendToBranchManagerFromCallCenter('${id}')">إرسال لمدير الفرع (ناقص فعلاً) <i class="fas fa-arrow-right"></i></button>`;
+                    } else if(op.stage === 'sent_to_branch_manager' && currentUserSession.title === 'مدير فرع') {
+                        btns = `<button class="btn-vip-execute-master" onclick="openBranchManagerReplyModalHub('${id}')">الرد كمدير فرع <i class="fas fa-reply-all"></i></button>`;
+                    } else if(op.stage === 'sent_back_to_call_center' && currentUserSession.role === 'SUPER') {
+                        btns = `<button class="btn-vip-execute-master" style="background:var(--success-glow); color:#000;" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً (الطلب سليم) <i class="fas fa-check-circle"></i></button>
+                                <button class="btn-vip-execute-master" onclick="sendToRegionalManager('${id}')">إرسال لمدير المنطقة <i class="fas fa-arrow-up"></i></button>`;
+                    } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.title === 'مدير المنطقة') {
+                        btns = `<button class="btn-vip-execute-master" onclick="openRegionalManagerReplyModalHub('${id}')">الرد كمدير منطقة <i class="fas fa-reply-all"></i></button>`;
+                    } else if(op.stage === 'sent_to_regional_manager' && currentUserSession.role === 'SUPER') {
+                        btns = `<button class="btn-vip-execute-master" onclick="finalizeTicketAndArchive('${id}')">إغلاق البلاغ نهائياً <i class="fas fa-check-circle"></i></button>`;
+                    }
+                }
+                if(currentUserSession.role === 'SUPER') {
+                    btns += `<button class="btn-vip-execute-master" style="background:var(--danger-pulse); color:#fff; margin-top:10px;" onclick="deleteTicketRecord('${id}')">حذف البلاغ نهائياً <i class="fas fa-trash"></i></button>`;
+                }
+
+                const logs = op.logs ? op.logs.map(l => `
+                    <div class="audit-row-item">
+                        <b>${l.user}:</b> ${l.action}
+                        <span class="timestamp-label">${l.time}</span>
+                    </div>`).join('') : '';
+
+                const badge = (op.branch_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">تأكيد نقص فعلي ❌</span>' :
+                    (op.branch_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">الأوردر كامل وسليم ✅</span>' : '')) +
+                    (op.branch_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير الفرع: نقص فعلي ❌</span>' :
+                    (op.branch_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير الفرع: كامل ✅</span>' : '')) +
+                    (op.regional_manager_verdict === 'ناقص' ? '<span class="badge-status-glow" style="background:rgba(239, 68, 68, 0.2); color:var(--danger-pulse); border:2px solid var(--danger-pulse);">مدير المنطقة: نقص فعلي ❌</span>' :
+                    (op.regional_manager_verdict === 'كامل' ? '<span class="badge-status-glow" style="background:rgba(16, 185, 129, 0.2); color:var(--success-glow); border:2px solid var(--success-glow);">مدير المنطقة: كامل ✅</span>' : ''));
+
+                return `
+                    <div class="massive-glass-card ticket-visual-unit">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+                            <b style="color:var(--gold-master); font-size:2rem;">📍 فرع : ${op.branch}</b>
+                            <span style="opacity:0.7; font-weight:900;">${op.timestamp}</span>
+                        </div>
+                        ${badge}
+                        <div style="font-size:3rem; font-weight:950; margin-bottom:25px;">📦 أوردر: #${op.order}</div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; margin-bottom:25px; color:var(--accent-navy); font-weight:950; font-size:1.4rem;">
+                            <span>👤 العميل: ${op.customer}</span>
+                            <span>🏷️ النوع: ${op.type}</span>
+                        </div>
+                        <div style="color:var(--success-glow); font-weight:950; margin-bottom:25px; font-size:1.4rem;">👨‍✈️ الطيار: ${op.driver || '---'}</div>
+                        <div style="color:var(--accent-navy); font-weight:950; margin-bottom:25px; font-size:1.2rem;">
+                            👤 المحرر: ${op.author || '---'}<br>
+                            👨‍💼 الديسبتشر: ${op.dispatcher_name || '---'}<br>
+                            👨‍💼 مدير الفرع: ${op.branch_manager_name || '---'}<br>
+                            👨‍💼 مدير المنطقة: ${op.regional_manager_name || '---'}
+                        </div>
+                        <p style="background:rgba(0,0,0,0.65); padding:30px; border-radius:20px; border:2px solid rgba(255,255,255,0.1); font-size:1.4rem; line-height:1.8;">📝 ${op.msg}</p>
+                        <div class="audit-logs-viewport">${logs}</div>
+                        <div style="margin-top:40px;">${btns}</div>
+                    </div>`;
+            }
+
+            /**
+            * محرك التحليلات الفائقة المطور (ULTRA ANALYTICS ENGINE)
+            * يقوم بحساب معدل الخطأ وإظهار الأرقام الفردية لكل فرع + تحليل أنواع الشكاوى
+            */
+            async function executeAdvancedAnalyticsSequence() {
+                const from = document.getElementById('reports-date-from').value;
+                const to = document.getElementById('reports-date-to').value;
+                const ops = Object.values(complaintsCache).filter(o => o.date >= from && o.date <= to);
+                
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
+                const canSeeAll = p.view_all || currentUserSession.branch === 'ALL' || currentUserSession.role === 'SUPER';
+
+                // تحديث بطاقات الإحصاء العلوية
+                const resolved = ops.filter(o => o.status === 'done').length;
+                document.getElementById('render-analytics-stat-row').innerHTML = `
+                    <div class="analytics-pill-card" style="border-top: 12px solid var(--gold-master)"><h2>${ops.length}</h2><p>إجمالي البلاغات</p></div>
+                    <div class="analytics-pill-card" style="border-top: 12px solid var(--success-glow)"><h2>${resolved}</h2><p>بلاغات مغلقة</p></div>
+                    <div class="analytics-pill-card" style="border-top: 12px solid var(--danger-pulse)"><h2>${ops.length - resolved}</h2><p>بلاغات قيد العمل</p></div>
+                    <div class="analytics-pill-card" style="border-top: 12px solid var(--accent-navy)"><h2>${ops.length ? Math.round((resolved/ops.length)*100) : 0}%</h2><p>نسبة الإنجاز</p></div>
+                `;
+
+                // 1. Chart 1: Error Rate Bar Chart
+                const dSnap = await dbHub.ref('daily_stats').get();
+                const allDays = dSnap.val() || {};
+                const labels = [];
+                const complaintsCounts = [];
+                const ordersCounts = [];
+                const ratios = [];
+
+                branchListCache.forEach(br => {
+                    if(!canSeeAll && br !== currentUserSession.branch) return;
+                    labels.push(br);
+                    const brComplaints = ops.filter(o => o.branch === br).length;
+                    let brOrders = 0;
+                    Object.keys(allDays).forEach(day => {
+                        if(day >= from && day <= to && allDays[day][br]) brOrders += parseInt(allDays[day][br]);
+                    });
+                    complaintsCounts.push(brComplaints);
+                    ordersCounts.push(brOrders);
+                    ratios.push(brOrders > 0 ? ((brComplaints / brOrders) * 100).toFixed(2) : 0);
+                });
+
+                if(analyticsChartInstance) analyticsChartInstance.destroy();
+                analyticsChartInstance = new Chart(document.getElementById('master-reports-canvas'), {
+                    type: 'bar',
+                    plugins: [ChartDataLabels],
+                    data: { 
+                        labels: labels, 
+                        datasets: [{ 
+                            label: 'معدل الخطأ %', 
+                            data: ratios, 
+                            backgroundColor: '#f59e0b', 
+                            borderRadius: 15,
+                            customComplaints: complaintsCounts,
+                            customOrders: ordersCounts
+                        }] 
+                    },
+                    options: { 
+                        scales: { 
+                            y: { beginAtZero: true, ticks: { color: '#fff' } }, 
+                            x: { ticks: { color: '#fff' } } 
+                        },
+                        plugins: { 
+                            legend: { labels: { color: '#fff', font: {size: 14} } },
+                            datalabels: { 
+                                anchor: 'end', align: 'top', color: '#fff', font: { weight: 'bold', size: 12 },
+                                formatter: (value, ctx) => `ش: ${ctx.dataset.customComplaints[ctx.dataIndex]} | أ: ${ctx.dataset.customOrders[ctx.dataIndex]}\n(${value}%)`,
+                                textAlign: 'center'
+                            }
+                        }
+                    }
+                });
+
+                // 2. Chart 2: Type Analysis (Pie/Doughnut)
+                const typeCounts = {};
+                let filteredOpsForType = canSeeAll ? ops : ops.filter(o => o.branch === currentUserSession.branch);
+                
+                filteredOpsForType.forEach(o => { 
+                    const t = o.type || 'غير محدد'; 
+                    typeCounts[t] = (typeCounts[t] || 0) + 1; 
+                });
+
+                const typeLabels = Object.keys(typeCounts);
+                const typeValues = Object.values(typeCounts);
+                const totalComplaints = typeValues.reduce((a, b) => a + b, 0);
+                const pieColors = ['#f59e0b', '#ef4444', '#10b981', '#1d4ed8', '#8b5cf6', '#ec4899', '#6366f1'];
+
+                if(analyticsTypeChartInstance) analyticsTypeChartInstance.destroy();
+                analyticsTypeChartInstance = new Chart(document.getElementById('master-types-canvas'), {
+                    type: 'doughnut',
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: typeLabels,
+                        datasets: [{ 
+                            data: typeValues, 
+                            backgroundColor: pieColors, 
+                            borderColor: '#000', 
+                            borderWidth: 2, 
+                            hoverOffset: 10 
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'right', 
+                                labels: { color: '#fff', font: { size: 12 }, padding: 15 } 
+                            },
+                            datalabels: {
+                                color: '#000', font: { weight: 'bold', size: 12 },
+                                formatter: (value) => ((value / totalComplaints) * 100).toFixed(1) + "%",
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: 5, padding: 5
+                            }
+                        }
+                    }
+                });
+            }
+
+            /**
+            * تصدير البيانات لإكسل (Excel Exporter)
+            */
+            function exportReportsToExcel() {
+                const from = document.getElementById('reports-date-from').value;
+                const to = document.getElementById('reports-date-to').value;
+                const ops = Object.values(complaintsCache).filter(o => o.date >= from && o.date <= to);
+                
+                const list = ops.map(o => ({
+                    'تاريخ البلاغ': o.date,
+                    'وقت البلاغ': o.timeOnly,
+                    'الفرع': o.branch,
+                    'رقم الأوردر': o.order,
+                    'اسم العميل': o.customer,
+                    'نوع الشكوى': o.type,
+                    'الحالة': o.status === 'done' ? 'مغلق' : 'نشط',
+                    'النتيجة': o.branch_verdict || '---',
+                    'المحرر': o.author
+                }));
+
+                const ws = XLSX.utils.json_to_sheet(list);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "VIP_Report");
+                XLSX.writeFile(wb, `VIP_Analytics_${from}_to_${to}.xlsx`);
+            }
+
+            /**
+            * رد الفرع الرسمي (Official Reply Module)
+            */
+            async function openBranchReplyModalHub(id) {
+                const { value: res } = await Swal.fire({
+                    title: 'الرد والمراجعة الرسمية للفرع',
+                    html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
+                        <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
+                    preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
+                });
+
+                if(res) {
+                    const op = complaintsCache[id];
+                    const action = res[0] === 'ناقص' ? `الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]} - تم أرشفة البلاغ تلقائياً.` : `رد الفرع: [الطلب سليم] - ${res[1]}`;
+                    const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
+                    const newStage = 'replied';
+                    const updateData = {
+                        stage: newStage,
+                        branch_verdict: res[0],
+                        dispatcher_name: currentUserSession.name,
+                        logs: [...(op.logs || []), log]
+                    };
+                    if(res[0] === 'ناقص') {
+                        updateData.status = 'done';
+                    }
+
+                    await dbHub.ref('operations/'+id).update(updateData);
+                    renderSystemToast(res[0] === 'ناقص' ? "تم أرشفة البلاغ تلقائياً بسبب النقص الفعلي!" : "تم تثبيت رد الفرع بنجاح!", "success");
+                }
+            }
+
+            async function finalizeTicketAndArchive(id) {
+                const op = complaintsCache[id];
+                const log = {
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    user: currentUserSession.name,
+                    action: "إغلاق البلاغ نهائياً للأرشيف السحابي."
+                };
+                await dbHub.ref('operations/'+id).update({
+                    status: 'done',
+                    logs: [...(op.logs || []), log]
+                });
+                renderSystemToast("تم أرشفة البلاغ بنجاح.", "success");
+            }
+
+            async function sendToBranchManagerFromCallCenter(id) {
+                const op = complaintsCache[id];
+                const log = {
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    user: currentUserSession.name,
+                    action: "الكول سنتر يؤكد نقص فعلي بعد مراجعة العميل - إرسال لمدير الفرع."
+                };
+                await dbHub.ref('operations/'+id).update({
+                    stage: 'sent_to_branch_manager',
+                    logs: [...(op.logs || []), log]
+                });
+                renderSystemToast("تم إرسال البلاغ لمدير الفرع.", "success");
+            }
+
+            async function sendToRegionalManager(id) {
+                const op = complaintsCache[id];
+                const log = {
+                    time: new Date().toLocaleTimeString('ar-EG'),
+                    user: currentUserSession.name,
+                    action: "الكول سنتر يرسل البلاغ لمدير المنطقة للمراجعة النهائية."
+                };
+                await dbHub.ref('operations/'+id).update({
+                    stage: 'sent_to_regional_manager',
+                    logs: [...(op.logs || []), log]
+                });
+                renderSystemToast("تم إرسال البلاغ لمدير المنطقة.", "success");
+            }
+
+            /**
+            * حذف البلاغ نهائياً (Super Admin Delete Module)
+            */
+            async function deleteTicketRecord(id) {
+                const { value: confirmDelete } = await Swal.fire({
+                    title: 'تأكيد الحذف النهائي',
+                    text: 'هل أنت متأكد من حذف هذا البلاغ نهائياً؟ لا يمكن التراجع عن هذا الإجراء.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'نعم، احذف',
+                    cancelButtonText: 'إلغاء'
+                });
+
+                if (confirmDelete) {
+                    await dbHub.ref('operations/' + id).remove();
+                    renderSystemToast("تم حذف البلاغ نهائياً.", "success");
+                }
+            }
+
+            /**
+            * رد مدير الفرع (Branch Manager Reply Module)
+            */
+            async function openBranchManagerReplyModalHub(id) {
+                const { value: res } = await Swal.fire({
+                    title: 'الرد والمراجعة الرسمية لمدير الفرع',
+                    html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
+                        <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
+                    preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
+                });
+
+                if(res) {
+                    const op = complaintsCache[id];
+                    const action = res[0] === 'ناقص' ? `مدير الفرع يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير الفرع: [الطلب سليم] - ${res[1]}`;
+                    const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
+                    const newStage = 'sent_back_to_call_center';
+
+                    await dbHub.ref('operations/'+id).update({
+                        stage: newStage,
+                        branch_manager_verdict: res[0],
+                        branch_manager_name: currentUserSession.name,
+                        logs: [...(op.logs || []), log]
+                    });
+                    renderSystemToast("تم تثبيت رد مدير الفرع بنجاح!", "success");
+                }
+            }
+
+            /**
+            * رد مدير المنطقة (Regional Manager Reply Module)
+            */
+            async function openRegionalManagerReplyModalHub(id) {
+                const { value: res } = await Swal.fire({
+                    title: 'الرد والمراجعة الرسمية لمدير المنطقة',
+                    html: `<select id="sw-status" class="swal2-input"><option value="كامل">✅ الطلب مراجع وسليم</option><option value="ناقص">❌ الطلب ناقص فعلاً (اعتراف بالخطأ)</option></select>
+                        <textarea id="sw-msg" class="swal2-input" placeholder="اكتب تفاصيل المراجعة وما تم مع العميل..."></textarea>`,
+                    preConfirm: () => [document.getElementById('sw-status').value, document.getElementById('sw-msg').value]
+                });
+
+                if(res) {
+                    const op = complaintsCache[id];
+                    const action = res[0] === 'ناقص' ? `مدير المنطقة يؤكد: [نقص فعلي ⚠️] - ${res[1]}` : `رد مدير المنطقة: [الطلب سليم] - ${res[1]}`;
+                    const log = { time: new Date().toLocaleTimeString('ar-EG'), user: currentUserSession.name, action: action };
+                    const newStage = 'sent_to_regional_manager';
+
+                    await dbHub.ref('operations/'+id).update({
+                        stage: newStage,
+                        regional_manager_verdict: res[0],
+                        regional_manager_name: currentUserSession.name,
+                        logs: [...(op.logs || []), log]
+                    });
+                    renderSystemToast("تم تثبيت رد مدير المنطقة بنجاح!", "success");
+                }
+            }
+
+            /**
+            * مزامنة القوائم والخيارات (UI Sync Hub)
+            */
+            function syncUiDropdownSelections() {
+                const html = branchListCache.map(b => `<option>${b}</option>`).join('');
+                document.getElementById('f-branch-master-sel').innerHTML = html;
+                document.getElementById('adm-whatsapp-br-sel').innerHTML = html;
+                document.getElementById('reg-user-branch-sel-core').innerHTML = `<option value="ALL">الإدارة العليا</option>` + html;
+                
+                const ranks = systemSettingsCache.custom_ranks ? Object.keys(systemSettingsCache.custom_ranks) : ['ديسبتشر', 'مدير فرع', 'مدير المنطقة'];
+                const rHtml = ranks.map(r => `<option>${r}</option>`).join('');
+                document.getElementById('adm-rank-matrix-sel').innerHTML = `<option value="">-- اختر رتبة لتعديل مصفوفتها --</option>` + rHtml;
+                document.getElementById('reg-user-rank-sel-core').innerHTML = rHtml;
+            }
+
+            function renderAdminBranchScrollBox() {
+                const box = document.getElementById('adm-branches-scroll-box'); box.innerHTML = "";
+                const brs = systemSettingsCache.branches || {};
+                Object.keys(brs).forEach(k => {
+                    box.innerHTML += `
+                        <div class="admin-row-item">
+                            <span><i class="fas fa-building" style="color:var(--gold-master)"></i> ${brs[k]}</span>
+                            <i class="fas fa-trash-alt" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('settings/branches/${k}').remove()"></i>
+                        </div>`;
+                });
+            }
+
+            async function addSystemBranchCore() {
+                const n = document.getElementById('adm-branch-name-input').value.trim();
+                if(n) await dbHub.ref('settings/branches').push(n);
+                document.getElementById('adm-branch-name-input').value = "";
+            }
+
+            function renderBranchWhatsappList() {
+                const br = document.getElementById('adm-whatsapp-br-sel').value;
+                const box = document.getElementById('adm-whatsapp-scroll-box'); box.innerHTML = "";
+                const p = systemSettingsCache.phones ? (systemSettingsCache.phones[br] || {}) : {};
+                Object.keys(p).forEach(k => box.innerHTML += `
+                    <div class="admin-row-item">
+                        <span>${p[k]}</span>
+                        <i class="fas fa-trash" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('settings/phones/${br}/${k}').remove()"></i>
+                    </div>`);
+            }
+
+            async function bindNewWhatsappToBranch() {
+                const br = document.getElementById('adm-whatsapp-br-sel').value;
+                const ph = document.getElementById('adm-whatsapp-phone-input').value.trim();
+                if(ph) await dbHub.ref(`settings/phones/${br}`).push(ph);
+                document.getElementById('adm-whatsapp-phone-input').value = "";
+            }
+
+            function loadRankPermissionsMatrixHub() {
+                const r = document.getElementById('adm-rank-matrix-sel').value;
+                if(!r) { document.getElementById('adm-permissions-grid-hub').classList.add('hidden'); return; }
+                document.getElementById('adm-permissions-grid-hub').classList.remove('hidden');
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[r] || {}) : {};
+                document.getElementById('perm-view-all').checked = p.view_all || false;
+                document.getElementById('perm-create-ticket').checked = p.create_ticket || false;
+                document.getElementById('perm-reply-ticket').checked = p.reply_ticket || false;
+                document.getElementById('perm-daily-edit').checked = p.daily_edit || false;
+                document.getElementById('perm-admin-access').checked = p.admin_access || false;
+            }
+
+            async function saveRankPermissionsSequence() {
+                const r = document.getElementById('adm-rank-matrix-sel').value;
+                const data = {
+                    view_all: document.getElementById('perm-view-all').checked,
+                    create_ticket: document.getElementById('perm-create-ticket').checked,
+                    reply_ticket: document.getElementById('perm-reply-ticket').checked,
+                    daily_edit: document.getElementById('perm-daily-edit').checked,
+                    admin_access: document.getElementById('perm-admin-access').checked
+                };
+                await dbHub.ref('settings/permissions/'+r).set(data);
+                renderSystemToast("تم تحديث مصفوفة الصلاحيات.", "success");
+            }
+
+            function renderAdminUsersScrollBox() {
+                const box = document.getElementById('adm-users-scroll-box'); box.innerHTML = "";
+                dbHub.ref('users').once('value', snap => {
+                    const u = snap.val() || {};
+                    Object.keys(u).forEach(uid => {
+                        const user = u[uid];
+                        box.innerHTML += `
+                            <div class="admin-row-item">
+                                <div>
+                                    <b style="color:var(--gold-master)">${user.name}</b> <small>(${user.title})</small>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted-core)">ID: ${uid} | الفرع: ${user.branch}</div>
+                                </div>
+                                <i class="fas fa-user-minus" style="color:var(--danger-pulse); cursor:pointer;" onclick="dbHub.ref('users/${uid}').remove().then(()=>renderAdminUsersScrollBox())"></i>
+                            </div>`;
+                    });
+                });
+            }
+
+            async function registerNewUserToSystemSequence() {
+                const id = document.getElementById('reg-user-id-core').value.trim();
+                const data = {
+                    name: document.getElementById('reg-user-fullname-core').value,
+                    title: document.getElementById('reg-user-rank-sel-core').value,
+                    branch: document.getElementById('reg-user-branch-sel-core').value,
+                    pass: document.getElementById('reg-user-pass-core').value
+                };
+                if(id && data.name) await dbHub.ref('users/'+id).set(data).then(()=>renderAdminUsersScrollBox());
+                renderSystemToast("تم تفعيل عضوية الموظف.", "success");
+            }
+
+            function registerNewRankTitleCore() {
+                const t = document.getElementById('adm-rank-name-input').value.trim();
+                if(t) dbHub.ref('settings/custom_ranks/'+t).set(true);
+                document.getElementById('adm-rank-name-input').value = "";
+            }
+
+            function runPermissionShieldCheck() {
+                const p = systemSettingsCache.permissions ? (systemSettingsCache.permissions[currentUserSession.title] || {}) : {};
+                if(p.admin_access || currentUserSession.role === 'SUPER') document.getElementById('tab-admin').classList.remove('hidden');
+                const canAdd = p.create_ticket || currentUserSession.role === 'SUPER' || currentUserSession.title === 'ديسبتشر';
+                document.getElementById('floating-plus-btn').className = canAdd ? 'floating-action-master' : 'hidden';
+            }
+
+            /**
+            * مساعدات الواجهة (UI Logic Helpers)
+            */
+            function openSidebarControl() {
+                const sb = document.getElementById('sidebar-complaint-arc-hub');
+                sb.classList.add('open');
+                document.getElementById('master-dimmer').style.display = 'block';
+            }
+
+            function closeSidebarControl() {
+                const sb = document.getElementById('sidebar-complaint-arc-hub');
+                sb.classList.remove('open');
+                document.getElementById('master-dimmer').style.display = 'none';
+            }
+
+            function toggleSidebar() {
+                const sb = document.getElementById('system-side-nav');
+                sb.classList.toggle('open');
+            }
+
+            function switchToAppModule(m) {
+                document.querySelectorAll('.nav-link-vip').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('tab-' + m).classList.add('active');
+                
+                ['live', 'daily', 'archive', 'reports', 'admin'].forEach(id => {
+                    document.getElementById('module-view-' + id).classList.add('hidden');
+                });
+                document.getElementById('module-view-' + m).classList.remove('hidden');
+
+                if(m === 'reports') executeAdvancedAnalyticsSequence();
+                if(m === 'daily') loadDailySnapshotData();
+            }
+
+            function renderSystemToast(m, type) {
+                const box = document.getElementById('system-toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast-msg-vip';
+                if(type === 'danger') toast.style.background = '#ef4444';
+                toast.innerHTML = `<i class="fas ${type === 'danger' ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${m}`;
+                box.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
+            }
+
+        </script>
+    </body>
+    </html>
