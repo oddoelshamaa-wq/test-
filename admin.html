@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منيو شيخ البلد - الفخامة</title>
+    <!-- الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #c62828; 
+            --dark: #1e272e;
+            --gray: #808e9b;
+            --bg: #f7f9fb;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--dark); overflow-x: hidden; }
+
+        /* --- Header --- */
+        header { 
+            background: var(--white); padding: 30px 20px; text-align: center; 
+            border-bottom: 1px solid #edf2f7; position: sticky; top: 0; z-index: 100;
+        }
+        header h1 { color: var(--primary); font-size: 26px; font-weight: 900; }
+        header p { color: var(--gray); font-size: 13px; margin-top: 5px; font-weight: 500; }
+
+        /* --- Categories --- */
+        .categories { 
+            display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; 
+            background: var(--bg); scrollbar-width: none; position: sticky; top: 96px; z-index: 90;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-chip { 
+            background: var(--white); color: var(--dark); padding: 10px 22px; 
+            border-radius: 14px; font-weight: 700; font-size: 14px; 
+            white-space: nowrap; cursor: pointer; transition: 0.3s; border: 1px solid transparent;
+        }
+        .cat-chip.active { background: var(--dark); color: var(--white); transform: scale(1.05); }
+
+        /* --- Menu List --- */
+        .menu-container { padding: 10px 20px 50px; max-width: 600px; margin: 0 auto; display: grid; gap: 15px; }
+        .food-card { 
+            background: var(--white); border-radius: 20px; display: flex; align-items: center; 
+            padding: 10px; gap: 15px; box-shadow: var(--shadow); cursor: pointer;
+            transition: 0.2s;
+        }
+        .food-card:active { transform: scale(0.97); }
+        .food-img { width: 85px; height: 85px; border-radius: 16px; object-fit: cover; }
+        .food-info { flex: 1; }
+        .food-name { font-size: 17px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .food-price { font-size: 17px; font-weight: 900; color: var(--primary); }
+
+        /* --- Modal (نافذة المنتج) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: flex-end; z-index: 2000;
+        }
+        .modal-card {
+            background: var(--white); width: 100%; max-width: 500px; 
+            border-top-left-radius: 35px; border-top-right-radius: 35px;
+            overflow: hidden; position: relative;
+            animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1);
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-img { width: 100%; height: 300px; object-fit: cover; }
+        
+        .close-circle {
+            position: absolute; top: 20px; left: 20px; width: 40px; height: 40px;
+            background: rgba(0,0,0,0.4); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer; font-size: 18px; z-index: 10;
+        }
+
+        .modal-body { padding: 25px 30px 40px; text-align: center; }
+        .drag-handle { width: 40px; height: 5px; background: #dfe6e9; border-radius: 10px; margin: 15px auto 0; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+
+        .modal-price-badge { 
+            display: inline-block; background: #fff5f5; color: var(--primary); 
+            padding: 6px 18px; border-radius: 50px; font-weight: 900; font-size: 18px; margin-bottom: 12px;
+        }
+        .modal-title { font-size: 24px; font-weight: 900; color: var(--dark); margin-bottom: 12px; }
+        .modal-desc { color: var(--gray); font-size: 15px; line-height: 1.7; font-weight: 500; }
+
+        .loading { text-align: center; padding: 100px; color: var(--gray); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>شيخ البلد</h1>
+        <p>الأصل في الطعم المصري</p>
+    </header>
+
+    <div class="categories" id="cats"></div>
+
+    <div class="menu-container" id="menu">
+        <div class="loading">جاري تحضير المنيو...</div>
+    </div>
+
+    <!-- نافذة المنتج (بدون زر إضافة) -->
+    <div class="modal-overlay" id="modal" onclick="closeModal()">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="drag-handle"></div>
+            <button class="close-circle" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <img src="" id="m-img" class="modal-img">
+            <div class="modal-body">
+                <div class="modal-price-badge" id="m-price"></div>
+                <h2 id="m-title" class="modal-title"></h2>
+                <p id="m-desc" class="modal-desc"></p>
+                <div style="height: 20px;"></div> <!-- مساحة جمالية في الأسفل -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1J7lSkqHHShPlkvtIUwpgmgsGqJ1uhJQ",
+            authDomain: "sheikh-pro-61502.firebaseapp.com",
+            projectId: "sheikh-pro-61502",
+            storageBucket: "sheikh-pro-61502.firebasestorage.app",
+            messagingSenderId: "388665698743",
+            appId: "1:388665698743:web:7eca2bfc0223f9c1736032",
+            measurementId: "G-5F3J5S68LP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let menuData = [];
+        let categories = [];
+
+        onValue(ref(db, 'categories'), (s) => {
+            const d = s.val();
+            categories = d ? (Array.isArray(d) ? d : Object.values(d)) : [];
+            renderCats();
+        });
+
+        onValue(ref(db, 'menu'), (s) => {
+            const d = s.val();
+            menuData = d ? (Array.isArray(d) ? d : Object.values(d)) : [];
+            renderMenu('all');
+        });
+
+        function renderCats() {
+            const container = document.getElementById('cats');
+            let h = `<div class="cat-chip active" onclick="filter('all')" id="c-all">الكل</div>`;
+            categories.forEach(c => {
+                if(c) h += `<div class="cat-chip" onclick="filter('${c}')" id="c-${c}">${c}</div>`;
+            });
+            container.innerHTML = h;
+        }
+
+        window.filter = (c) => {
+            document.querySelectorAll('.cat-chip').forEach(el => el.classList.remove('active'));
+            document.getElementById(`c-${c}`).classList.add('active');
+            renderMenu(c);
+        };
+
+        function renderMenu(cat) {
+            const list = document.getElementById('menu');
+            const items = cat === 'all' ? menuData : menuData.filter(i => i.cat === cat);
+            
+            if(items.length === 0) {
+                list.innerHTML = '<div class="loading">لا توجد أصناف حالياً</div>';
+                return;
+            }
+
+            list.innerHTML = items.map(i => `
+                <div class="food-card" onclick='showDetails(${JSON.stringify(i)})'>
+                    <img src="${i.img || 'https://via.placeholder.com/150'}" class="food-img">
+                    <div class="food-info">
+                        <div class="food-name">${i.name}</div>
+                        <div class="food-price">${i.price} ج.م</div>
+                    </div>
+                    <i class="fas fa-angle-left" style="color: #ddd; margin-left: 5px;"></i>
+                </div>
+            `).join('');
+        }
+
+        window.showDetails = (item) => {
+            document.getElementById('m-img').src = item.img || 'https://via.placeholder.com/150';
+            document.getElementById('m-title').innerText = item.name;
+            document.getElementById('m-price').innerText = `${item.price} ج.م`;
+            document.getElementById('m-desc').innerText = item.desc || "هذا المنتج محضر من أجود المكونات الطازجة لتستمتع بأفضل مذاق.";
+            document.getElementById('modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeModal = () => {
+            document.getElementById('modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+    </script>
+</body>
+</html>
