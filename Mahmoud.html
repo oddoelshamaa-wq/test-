@@ -2027,6 +2027,66 @@ body.light-mode .ticket-hidden-details {
 body.light-mode.mobile-view .ticket-visual-unit {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
 }
+/* تحسينات شاملة للموبايل - ضعها في آخر قسم الـ Style */
+@media (max-width: 600px) {
+    /* 1. تصغير العناوين الضخمة */
+    h1, h2 {
+        font-size: 1.4rem !important;
+        margin-bottom: 10px !important;
+        text-align: center;
+    }
+
+    /* 2. تصغير المدخلات الضخمة (التي تظهر في الصورة) */
+    .massive-daily-input {
+        font-size: 2.5rem !important; /* بدلاً من 5rem */
+        margin-top: 10px !important;
+    }
+
+    /* 3. تقليل الفراغات الداخلية في الكروت */
+    .massive-glass-card, .branch-data-card {
+        padding: 20px !important; /* بدلاً من 80px */
+        margin-bottom: 20px !important;
+    }
+
+    /* 4. ضبط شريط اختيار الفرع والتاريخ ليظهروا تحت بعض */
+    .massive-glass-card[style*="display: flex"], 
+    div[style*="display:flex"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    /* 5. ضبط حجم المدخلات والسلكت */
+    input, select, textarea {
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* 6. تصغير حجم التاريخ والوقت */
+    #daily-master-date-picker, #live-date-filter {
+        width: 100% !important;
+        font-size: 1rem !important;
+    }
+
+    /* 7. ضبط الأزرار */
+    .btn-vip-execute-master {
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+        border-radius: 12px !important;
+    }
+
+    /* 8. إصلاح التداخل في الهيدر */
+    .vip-master-container {
+        padding-top: 70px !important; /* مساحة للزر الهامبرغر */
+    }
+
+    /* 9. جعل كروت اليومية تأخذ عرض الشاشة بالكامل */
+    .daily-matrix-display {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+}
     </style>
 </head>
 
