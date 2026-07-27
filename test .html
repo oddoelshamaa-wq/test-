@@ -3708,22 +3708,32 @@ function checkSavedSession() {
         currentUser = allUsersData[s]; 
         currentUser.role = MANAGERS.includes(s) ? 'admin' : 'employee'; 
         
-        // --- إضافة الكود هنا ---
+        // إعادة تفعيل الرقابة على الجلسة عند تحديث الصفحة
         manageSingleSession(s);
-        // ----------------------
 
         if (currentUser.role === 'admin') showAdmin(); 
         else { setupPresence(s); showEmployee(); } 
         startGlobalTimer(); 
     } 
-}                                    
-                                    function attemptLogin() { 
-                                        const u = document.getElementById('loginUser').value.trim().toLowerCase(), p = document.getElementById('loginPass').value.trim(); 
-                                        if (allUsersData[u] && allUsersData[u].password === p) { 
-                                            currentUser = allUsersData[u]; currentUser.role = MANAGERS.includes(u) ? 'admin' : 'employee'; 
-                                            localStorage.setItem('break_sys_user', u); if (currentUser.role === 'admin') showAdmin(); else { setupPresence(u); showEmployee(); } 
-                                        } else alert('بيانات الدخول غير صحيحة'); 
-                                    }
+}                                 
+                                  function attemptLogin() { 
+    const u = document.getElementById('loginUser').value.trim().toLowerCase();
+    const p = document.getElementById('loginPass').value.trim(); 
+    
+    if (allUsersData[u] && allUsersData[u].password === p) { 
+        currentUser = allUsersData[u]; 
+        currentUser.role = MANAGERS.includes(u) ? 'admin' : 'employee'; 
+        localStorage.setItem('break_sys_user', u); 
+
+        // تفعيل نظام الجهاز الواحد فور الدخول
+        manageSingleSession(u);
+
+        if (currentUser.role === 'admin') showAdmin(); 
+        else { setupPresence(u); showEmployee(); } 
+    } else {
+        alert('بيانات الدخول غير صحيحة'); 
+    }
+}
 
                                     function setupPresence(un) { 
                                         const s = db.ref("users/" + un + "/state"), dRef = db.ref("users/" + un + "/device");
@@ -9369,24 +9379,26 @@ function prepareUpdate() {
             });
             // دالة لإدارة الجلسة الواحدة
 function manageSingleSession(username) {
-    // 1. إنشاء كود فريد للمتصفح الحالي
+    // استثناء المديرين (اختياري: لو عاوز الأدمن يفتح من كذا مكان سيب السطر ده)
+    if (MANAGERS.includes(username)) return;
+
+    // 1. إنشاء رقم فريد للمتصفح الحالي
     const currentSessionId = Date.now() + "_" + Math.random().toString(36).substr(2, 9);
     
-    // 2. تخزينه محلياً
+    // 2. تخزين الرقم محلياً وفي قاعدة البيانات
     localStorage.setItem('active_session_id', currentSessionId);
-
-    // 3. تحديثه في Firebase
     const sessionRef = db.ref('users/' + username + '/currentSessionId');
     sessionRef.set(currentSessionId);
 
-    // 4. مراقبة الكود في Firebase (إذا تغير من جهاز آخر)
+    // 3. مراقبة الرقم في Firebase (لو تغير من جهاز تاني)
     sessionRef.on('value', (snapshot) => {
         const sessionIdInDb = snapshot.val();
         const localSessionId = localStorage.getItem('active_session_id');
 
-        if (sessionIdInDb && sessionIdInDb !== localSessionId) {
-            alert("⚠️ تم فتح هذا الحساب من جهاز آخر. سيتم تسجيل الخروج الآن.");
-            // مسح البيانات وتسجيل الخروج
+        if (sessionIdInDb && localSessionId && sessionIdInDb !== localSessionId) {
+            alert("⚠️ تنبيه أمني: تم فتح حسابك من جهاز آخر. سيتم تسجيل خروجك حالاً.");
+            
+            // تنفيذ تسجيل الخروج الفوري
             localStorage.removeItem('break_sys_user');
             localStorage.removeItem('active_session_id');
             location.reload(); 
